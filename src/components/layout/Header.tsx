@@ -5,7 +5,7 @@ import { NavBar } from "./NavBar";
 
 export function Header() {
 	return (
-		<header className="fixed w-full py-3 border-b-[1px] flex justify-center">
+		<header className="fixed w-full z-1000 py-3 border-b-[1px] flex justify-center">
 			<div className="flex flex-row justify-between items-center w-full max-content-w">
 				<a
 					href="#home"
