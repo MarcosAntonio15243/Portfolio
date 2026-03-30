@@ -9,19 +9,19 @@ export function NavBar({ className = "", ...props }: NavBarProps) {
 	const navItems = [
 		{
 			value: "About",
-			link: "#about",
+			link: "/#about",
 		},
 		{
 			value: "Experience",
-			link: "#experience",
+			link: "/#experience",
 		},
 		{
-			value: "Project",
-			link: "#project",
+			value: "Projects",
+			link: "/#projects",
 		},
 		{
 			value: "Contact",
-			link: "#contact",
+			link: "/#contact",
 		},
 	];
 
