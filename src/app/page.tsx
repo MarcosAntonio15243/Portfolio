@@ -10,6 +10,8 @@ import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
 
 export default function Home() {
+	const currentYear = new Date().getFullYear();
+
 	return (
 		<div>
 			<Header />
@@ -223,7 +225,7 @@ export default function Home() {
 								</a>
 							</div>
 							<span className="text-[var(--color-text-primary)]">
-								Marcos Antonio - 2025
+								Marcos Antonio - {currentYear}
 							</span>
 						</div>
 					</footer>
