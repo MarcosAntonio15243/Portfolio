@@ -13,10 +13,10 @@ export default async function ProjectsPage() {
 		<div>
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
-				<div className="mx-6 max-content-w flex flex-col gap-10 py-10 w-full">
+				<div className="mx-6 max-content-w flex flex-col gap-10 py-10">
 					{/* Hero da página */}
 					<section className="flex flex-row justify-between gap-3">
-						<h1 className="text-2xl text-[var(--color-black)]">All Projects</h1>
+						<h1 className="name">All Projects</h1>
 						<a
 							href="https://github.com/MarcosAntonio15243?tab=repositories"
 							target="_blank"

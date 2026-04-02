@@ -43,8 +43,16 @@ export async function getPortfolioRepos(): Promise<GithubRepo[]> {
 	if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
 	const repos: GithubRepo[] = await res.json();
+	const portfolio = repos.filter((repo) => repo.topics?.includes("portfolio"));
 
-	return repos.filter((repo) => repo.topics?.includes("portfolio"));
+	const withImages = await Promise.all(
+		portfolio.map(async (repo) => ({
+			...repo,
+			open_graph_image_url: await fetchOgImage(repo.full_name),
+		})),
+	);
+
+	return withImages;
 }
 
 // Get detailed info for a single repo, including README and languages
@@ -84,7 +92,9 @@ export async function getRepoDetail(slug: string): Promise<RepoDetail | null> {
 	// Extract images from README (absolute and relative links converted)
 	const images = extractImagesFromReadme(readme, repo);
 
-	return { ...repo, readme, languages, images };
+	const ogImage = await fetchOgImage(repo.full_name);
+
+	return { ...repo, readme, languages, images, open_graph_image_url: ogImage };
 }
 
 // Extract URLs of images from README
@@ -120,6 +130,21 @@ function resolveImageUrl(url: string, rawBase: string): string | null {
 		return `${rawBase}/${url.replace(/^\.\//, "")}`;
 	}
 	return `${rawBase}${url}`;
+}
+
+async function fetchOgImage(repoFullName: string): Promise<string | null> {
+	try {
+		const res = await fetch(`https://github.com/${repoFullName}`, {
+			headers: { "User-Agent": "portfolio-bot" },
+			next: { revalidate: 3600 },
+		});
+		if (!res.ok) return null;
+		const html = await res.text();
+		const match = html.match(/<meta property="og:image"\s+content="([^"]+)"/);
+		return match?.[1] ?? null;
+	} catch {
+		return null;
+	}
 }
 
 // Color by language (for the badges)

@@ -19,13 +19,15 @@ import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 export const revalidate = 0;
 
 interface Props {
-	params: { slug: string };
+	params: Promise<{ slug: string }>;
 }
 
 const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";
 
 export default async function ProjectDetailPage({ params }: Props) {
-	const repo = await getRepoDetail(params.slug);
+	const { slug } = await params;
+
+	const repo = await getRepoDetail(slug);
 
 	if (!repo) notFound();
 
@@ -48,10 +50,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 		: null;
 
 	// Convert Markdown to HTML (full README and run section)
-	const [readmeHtml, runHtml] = await Promise.all([
-		cleanReadme ? markdownToHtml(cleanReadme) : Promise.resolve(null),
-		runSection ? markdownToHtml(runSection) : Promise.resolve(null),
-	]);
+	const readmeHtml = cleanReadme ? await markdownToHtml(cleanReadme) : null;
 
 	// Languages by percentage
 	const totalBytes = Object.values(repo.languages).reduce((a, b) => a + b, 0);
@@ -75,7 +74,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 		<div>
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
-				<div className="mx-6 max-content-w flex flex-col gap-8 py-10 w-full">
+				<div className="w-full max-content-w flex flex-col gap-8 py-10 px-6">
 					<Link
 						href="/projects"
 						className="flex items-center gap-1.5 text-sm font-roboto text-[var(--color-gray-400)] hover:text-[var(--color-text-primary)] transition-colors w-fit"
@@ -101,9 +100,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 							</div>
 						)}
 
-						<h1 className="text-2xl text-[var(--color-black)] capitalize">
-							{repo.name.replace(/-/g, " ")}
-						</h1>
+						<h1 className="name capitalize">{repo.name.replace(/-/g, " ")}</h1>
 
 						{repo.description && (
 							<p className="font-roboto text-[var(--color-text-primary)] leading-relaxed">
@@ -158,7 +155,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 					<div className="relative w-full aspect-video bg-[var(--color-bg-image)] border-[1px] border-[var(--color-bg-image)] overflow-hidden">
 						<Image
 							src={mainImage || PLACEHOLDER_SVG}
-							alt={`Preview do projeto ${repo.name}`}
+							alt={`Project Preview ${repo.name}`}
 							fill
 							sizes="(max-width: 768px) 100vw, 800px"
 							className="object-cover object-top"
@@ -215,18 +212,6 @@ export default async function ProjectDetailPage({ params }: Props) {
 
 					{galleryImages.length > 0 && <Divider />}
 
-					{/* How to Run */}
-					{runHtml && (
-						<section className="flex flex-col gap-4" id="how-to-run">
-							<h2>How to Run</h2>
-							<div className="p-4 bg-[var(--color-bg-card)] border-[1px] border-[var(--color-bg-image)]">
-								<ReadmeViewer html={runHtml} />
-							</div>
-						</section>
-					)}
-
-					{runHtml && readmeHtml && <Divider />}
-
 					{/* Full README */}
 					{readmeHtml && (
 						<section className="flex flex-col gap-4">
@@ -247,25 +232,3 @@ export default async function ProjectDetailPage({ params }: Props) {
 		</div>
 	);
 }
-
-// Componente auxiliar client-side para a galeria com modal
-// Como esta é uma Server Component, precisamos isolar o estado do modal
-// Crie um arquivo separado: components/projects/ImageModalTrigger.tsx
-// function ImageModalTrigger({ src, index }: { src: string; index: number }) {
-// 	// ATENÇÃO: mova este componente para um arquivo client separado:
-// 	// "use client"
-// 	// import { useState } from "react"
-// 	// import { ImageModal } from "@/components/ui/ImageModal"
-// 	return (
-// 		<div className="relative aspect-video overflow-hidden border-[1px] border-[var(--color-bg-image)] cursor-zoom-in">
-// 			<Image
-// 				src={src}
-// 				alt={`Screenshot ${index + 1}`}
-// 				fill
-// 				sizes="(max-width: 640px) 100vw, 50vw"
-// 				className="object-cover object-top"
-// 				quality={85}
-// 			/>
-// 		</div>
-// 	);
-// }
