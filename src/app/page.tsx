@@ -65,7 +65,7 @@ export default function Home() {
 							Grande, Paraiba, Brazil
 						</div>
 						<a
-							href="https://drive.google.com/file/d/1ZJId7DFc2nv3xRmkMtM1jL5_O-blAQ2L/view?usp=sharing"
+							href="https://drive.google.com/file/d/1HeaBC2AmN5ydfGGdcCVJ_gW78S_udKHE/view?usp=sharing"
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="Link to Curriculum Vitae of Marcos"
