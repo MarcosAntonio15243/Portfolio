@@ -33,26 +33,60 @@ export interface RepoDetail extends GithubRepo {
 	images: string[];
 }
 
-// Find all public repos with topic "portfolio"
+// Fetch all public repositories and return only those tagged as "portfolio"
 export async function getPortfolioRepos(): Promise<GithubRepo[]> {
 	const res = await fetch(
 		`${GITHUB_API}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated&type=public`,
-		{ headers, next: { revalidate: 0 } },
+		{ headers, next: { revalidate: 60 } },
 	);
 
 	if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
 	const repos: GithubRepo[] = await res.json();
-	const portfolio = repos.filter((repo) => repo.topics?.includes("portfolio"));
+	return repos
+		.filter((repo) => repo.topics?.includes("portfolio"))
+		.map((repo) => ({ ...repo, open_graph_image_url: null }));
+}
 
-	const withImages = await Promise.all(
-		portfolio.map(async (repo) => ({
-			...repo,
-			open_graph_image_url: await fetchOgImage(repo.full_name),
-		})),
-	);
+// Try to fetch the Open Graph image with retry and exponential backoff
+export async function fetchOgImageWithRetry(
+	repoFullName: string,
+	retries = 4,
+	baseDelay = 1000,
+): Promise<string | null> {
+	for (let attempt = 0; attempt <= retries; attempt++) {
+		try {
+			const res = await fetch(`https://github.com/${repoFullName}`, {
+				headers: { "User-Agent": "portfolio-bot" },
+				next: { revalidate: 3600 },
+			});
 
-	return withImages;
+			if (res.status === 429) {
+				const retryAfter = res.headers.get("Retry-After");
+				const delay = retryAfter
+					? parseInt(retryAfter) * 1000
+					: baseDelay * Math.pow(2, attempt);
+				if (attempt < retries) {
+					await new Promise((r) => setTimeout(r, delay));
+					continue;
+				}
+				return null;
+			}
+
+			if (!res.ok) return null;
+
+			const html = await res.text();
+			const match = html.match(/<meta property="og:image"\s+content="([^"]+)"/);
+			return match?.[1] ?? null;
+		} catch {
+			if (attempt < retries) {
+				await new Promise((r) =>
+					setTimeout(r, baseDelay * Math.pow(2, attempt)),
+				);
+			}
+		}
+	}
+	return null;
 }
 
 // Get detailed info for a single repo, including README and languages
@@ -122,6 +156,7 @@ function extractImagesFromReadme(
 	return Array.from(found);
 }
 
+// Resolve relative image URLs to absolute GitHub raw URLs
 function resolveImageUrl(url: string, rawBase: string): string | null {
 	if (!url || url.startsWith("http://") || url.startsWith("https://")) {
 		return url || null;
@@ -132,6 +167,7 @@ function resolveImageUrl(url: string, rawBase: string): string | null {
 	return `${rawBase}${url}`;
 }
 
+// Fetch Open Graph image from repository page (without retry)
 async function fetchOgImage(repoFullName: string): Promise<string | null> {
 	try {
 		const res = await fetch(`https://github.com/${repoFullName}`, {

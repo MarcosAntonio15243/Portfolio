@@ -12,7 +12,7 @@ import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { getRepoDetail, LANGUAGE_COLORS } from "@/lib/github";
-import { extractSection, markdownToHtml, stripBadges } from "@/lib/markdown";
+import { markdownToHtml, stripBadges } from "@/lib/markdown";
 import { FiGithub } from "react-icons/fi";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 
@@ -33,21 +33,6 @@ export default async function ProjectDetailPage({ params }: Props) {
 
 	// Process the README
 	const cleanReadme = repo.readme ? stripBadges(repo.readme) : null;
-
-	// Extract section "how to run" / "getting started" / "installation"
-	const runSection = cleanReadme
-		? extractSection(cleanReadme, [
-				"como rodar",
-				"como executar",
-				"getting started",
-				"installation",
-				"instalação",
-				"setup",
-				"running",
-				"usage",
-				"como usar",
-			])
-		: null;
 
 	// Convert Markdown to HTML (full README and run section)
 	const readmeHtml = cleanReadme ? await markdownToHtml(cleanReadme) : null;
@@ -74,7 +59,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 		<div>
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
-				<div className="w-full max-content-w flex flex-col gap-8 py-10 px-6">
+				<div className="mx-6 max-content-w flex flex-col gap-10 py-10">
 					<Link
 						href="/projects"
 						className="flex items-center gap-1.5 text-sm font-roboto text-[var(--color-gray-400)] hover:text-[var(--color-text-primary)] transition-colors w-fit"
