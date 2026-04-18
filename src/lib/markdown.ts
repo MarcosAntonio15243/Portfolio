@@ -7,7 +7,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-// Converte markdown para HTML
+// Convert markdown content into sanitized HTML with syntax highlighting
 export async function markdownToHtml(markdown: string): Promise<string> {
 	const result = await unified()
 		.use(remarkParse)
@@ -25,7 +25,7 @@ export async function markdownToHtml(markdown: string): Promise<string> {
 	return String(result);
 }
 
-// Remove badges/shields do início do README (deixa mais limpo na descrição)
+// Remove badges and shields from the beginning of the README for a cleaner description
 export function stripBadges(markdown: string): string {
 	return markdown
 		.replace(/\[!\[.*?\]\(https?:\/\/.*?\)\]\(.*?\)/g, "")

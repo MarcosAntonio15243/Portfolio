@@ -2,6 +2,19 @@ import { fetchOgImagesBatch } from "@/app/hooks/useOgImageQueue";
 
 const GITHUB_USERNAME = "MarcosAntonio15243";
 const GITHUB_API = "https://api.github.com";
+const BADGE_PATTERNS = [
+	/img\.shields\.io/,
+	/badge\.fury\.io/,
+	/badges\.gitter\.im/,
+	/codecov\.io\/gh/,
+	/github\.com\/.*\/workflows\/.*\/badge/,
+	/travis-ci\.(org|com)/,
+	/circleci\.com\/gh/,
+	/snyk\.io\/test/,
+	/david-dm\.org/,
+	/badgen\.net/,
+	/flat\.badgen\.net/,
+];
 
 const headers: HeadersInit = {
 	Accept: "application/vnd.github+json",
@@ -33,6 +46,10 @@ export interface RepoDetail extends GithubRepo {
 	readme: string | null;
 	languages: Record<string, number>;
 	images: string[];
+}
+
+function isBadgeUrl(url: string): boolean {
+	return BADGE_PATTERNS.some((pattern) => pattern.test(url));
 }
 
 // Fetch all public repositories and return only those tagged as "portfolio"
@@ -157,11 +174,11 @@ function extractImagesFromReadme(
 	let match;
 	while ((match = imgRegex.exec(readme)) !== null) {
 		const url = resolveImageUrl(match[1], rawBase);
-		if (url) found.add(url);
+		if (url && !isBadgeUrl(url)) found.add(url);
 	}
 	while ((match = htmlImgRegex.exec(readme)) !== null) {
 		const url = resolveImageUrl(match[1], rawBase);
-		if (url) found.add(url);
+		if (url && !isBadgeUrl(url)) found.add(url);
 	}
 
 	return Array.from(found);
