@@ -1,3 +1,5 @@
+import { fetchOgImagesBatch } from "@/app/hooks/useOgImageQueue";
+
 const GITHUB_USERNAME = "MarcosAntonio15243";
 const GITHUB_API = "https://api.github.com";
 
@@ -43,9 +45,18 @@ export async function getPortfolioRepos(): Promise<GithubRepo[]> {
 	if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
 	const repos: GithubRepo[] = await res.json();
-	return repos
-		.filter((repo) => repo.topics?.includes("portfolio"))
-		.map((repo) => ({ ...repo, open_graph_image_url: null }));
+	const portfolio = repos.filter((repo) => repo.topics?.includes("portfolio"));
+
+	// Fetch all Open Graph images in batches to avoid rate limiting
+	const ogImages = await fetchOgImagesBatch(
+		portfolio.map((r) => r.full_name),
+		{ concurrency: 4, retries: 3, baseDelay: 800, jitter: true },
+	);
+
+	return portfolio.map((repo) => ({
+		...repo,
+		open_graph_image_url: ogImages[repo.full_name] ?? null,
+	}));
 }
 
 // Try to fetch the Open Graph image with retry and exponential backoff

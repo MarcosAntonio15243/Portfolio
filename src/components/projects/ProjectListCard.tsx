@@ -3,10 +3,9 @@
 import { ArrowUpRight, GitFork, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type { GithubRepo } from "@/lib/github";
 import { LANGUAGE_COLORS } from "@/lib/github";
-import { enqueueOgImage } from "@/app/hooks/useOgImageQueue";
 
 interface ProjectListCardProps {
 	repo: GithubRepo;
@@ -16,9 +15,9 @@ const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";
 
 export function ProjectListCard({ repo }: ProjectListCardProps) {
 	const [imageLoaded, setImageLoaded] = useState(false);
-	const [ogUrl, setOgUrl] = useState<string | null>(null);
-	const cardRef = useRef<HTMLAnchorElement>(null);
-	const fetched = useRef(false);
+	const [imgSrc, setImgSrc] = useState(
+		repo.open_graph_image_url || PLACEHOLDER_SVG,
+	);
 
 	const langColor = repo.language ? LANGUAGE_COLORS[repo.language] : null;
 	const updatedAt = new Date(repo.updated_at).toLocaleDateString(undefined, {
@@ -26,35 +25,8 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 		year: "numeric",
 	});
 
-	useEffect(() => {
-		const el = cardRef.current;
-		if (!el) return;
-
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.isIntersecting && !fetched.current) {
-					fetched.current = true;
-					observer.disconnect();
-					// Join the global queue—don't send everything at once
-					enqueueOgImage(repo.full_name).then((url) => {
-						if (url) setOgUrl(url);
-					});
-				}
-			},
-			{ rootMargin: "200px" },
-		);
-
-		observer.observe(el);
-		return () => observer.disconnect();
-	}, [repo.full_name]);
-
-	useEffect(() => {
-		setImageLoaded(false);
-	}, [ogUrl]);
-
 	return (
 		<Link
-			ref={cardRef}
 			href={`/projects/${repo.name}`}
 			className="group flex flex-col border-[1px] border-[var(--color-border)] bg-[var(--color-bg-card)] hover:border-[var(--color-border-card)] transition-colors overflow-hidden"
 		>
@@ -63,7 +35,7 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 					<div className="absolute inset-0 bg-[var(--color-bg-image)] animate-pulse" />
 				)}
 				<Image
-					src={ogUrl || PLACEHOLDER_SVG}
+					src={imgSrc}
 					alt={`Preview de ${repo.name}`}
 					fill
 					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw"
@@ -72,6 +44,10 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 					}`}
 					quality={85}
 					onLoad={() => setImageLoaded(true)}
+					onError={() => {
+						setImgSrc(PLACEHOLDER_SVG);
+						setImageLoaded(true);
+					}}
 				/>
 			</div>
 
