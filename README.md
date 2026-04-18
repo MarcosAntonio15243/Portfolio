@@ -57,7 +57,7 @@ The current version showcased here represents the **second iteration (V2)** of t
 
 You can view both **V1** and **V2** of the prototype through the link below:
 
-[**Click here to view the Figma prototype**](https://www.figma.com/design/QIBvUltNYJF4wyk3jvCjio/Portf%C3%B3lio?node-id=0-1&p=f&t=9sPeLH9v1J1Kz2OY-0)
+[**Click here to view the Figma prototype**](https://www.figma.com/design/QIBvUltNYJF4wyk3jvCjio/Portf%C3%B3lio?node-id=2026-2&t=l6vVjuBrQzyESSbK-1)
 
 ## Running the Project
 
