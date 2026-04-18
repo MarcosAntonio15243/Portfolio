@@ -8,6 +8,7 @@ import { ExperienceCard, ProjectCard } from "@/components/cards";
 import { experiences, projects } from "@/components/data";
 import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
+import Link from "next/link";
 
 export default function Home() {
 	const currentYear = new Date().getFullYear();
@@ -64,7 +65,7 @@ export default function Home() {
 							Grande, Paraiba, Brazil
 						</div>
 						<a
-							href="https://drive.google.com/file/d/1ZJId7DFc2nv3xRmkMtM1jL5_O-blAQ2L/view?usp=sharing"
+							href="https://drive.google.com/file/d/1HeaBC2AmN5ydfGGdcCVJ_gW78S_udKHE/view?usp=sharing"
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="Link to Curriculum Vitae of Marcos"
@@ -153,8 +154,17 @@ export default function Home() {
 					<Divider />
 
 					{/* Featured Projects Section */}
-					<section id="project" className="flex flex-col gap-5">
-						<h2>Featured Project</h2>
+					<section id="projects" className="flex flex-col gap-5">
+						<div className="flex flex-row justify-between">
+							<h2>Featured Project</h2>
+							<Link
+								href="/projects"
+								className="flex items-center gap-1 flex-row font-roboto font-light self-center px-4 py-1.5 cursor-pointer hover:text-[var(--color-dark-gray)] underline underline-offset-2"
+							>
+								See all projects <ArrowUpRight className="size-4" />
+							</Link>
+						</div>
+
 						<div className="flex flex-col gap-8 my-5">
 							{projects.map((e, index) => {
 								return (
@@ -177,7 +187,7 @@ export default function Home() {
 							className="font-roboto font-light self-center px-4 py-1.5 cursor-pointer hover:text-[var(--color-dark-gray)] underline underline-offset-2"
 						>
 							<span className="flex flex-row items-center gap-1">
-								<span>See other projects on my github</span>
+								<span>See other projects on my GitHub</span>
 								<FiGithub />
 								<LuSquareArrowOutUpRight />
 							</span>

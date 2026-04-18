@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#393e46" stroke-width="0.5"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a2a2a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#2a2a2a" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#2a2a2a"/>
+
+  <!-- Grid pattern -->
+  <rect width="800" height="450" fill="url(#grid)"/>
+
+  <!-- Gradient overlay bottom -->
+  <rect width="800" height="450" fill="url(#fade)"/>
+
+  <!-- Center icon group -->
+  <g transform="translate(400, 195)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="52" fill="none" stroke="#393e46" stroke-width="1"/>
+    <!-- Inner circle bg -->
+    <circle cx="0" cy="0" r="44" fill="#2e2e2e"/>
+
+    <!-- Code brackets icon -->
+    <text
+      x="0" y="0"
+      font-family="monospace"
+      font-size="36"
+      fill="#929aab"
+      text-anchor="middle"
+      dominant-baseline="central"
+      letter-spacing="-2"
+    >&lt;/&gt;</text>
+  </g>
+
+  <!-- Label -->
+  <text
+    x="400" y="282"
+    font-family="Arial, sans-serif"
+    font-size="12"
+    font-weight="400"
+    fill="#929aab"
+    text-anchor="middle"
+    letter-spacing="0.12em"
+  >NO PREVIEW</text>
+
+  <!-- Corner accents -->
+  <!-- top-left -->
+  <path d="M 32 20 L 20 20 L 20 32" fill="none" stroke="#393e46" stroke-width="1.5"/>
+  <!-- top-right -->
+  <path d="M 768 20 L 780 20 L 780 32" fill="none" stroke="#393e46" stroke-width="1.5"/>
+  <!-- bottom-left -->
+  <path d="M 32 430 L 20 430 L 20 418" fill="none" stroke="#393e46" stroke-width="1.5"/>
+  <!-- bottom-right -->
+  <path d="M 768 430 L 780 430 L 780 418" fill="none" stroke="#393e46" stroke-width="1.5"/>
+</svg>
