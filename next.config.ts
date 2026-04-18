@@ -10,15 +10,15 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "opengraph.githubassets.com", // og-image do GitHub
+				hostname: "opengraph.githubassets.com", // Open Graph images
 			},
 			{
 				protocol: "https",
-				hostname: "raw.githubusercontent.com", // imagens do README
+				hostname: "raw.githubusercontent.com", // README images
 			},
 			{
 				protocol: "https",
-				hostname: "*.githubusercontent.com", // avatares e assets
+				hostname: "*.githubusercontent.com", // Avatars and other assets
 			},
 			{
 				protocol: "https",

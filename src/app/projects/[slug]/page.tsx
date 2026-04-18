@@ -12,7 +12,11 @@ import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { getRepoDetail, LANGUAGE_COLORS } from "@/lib/github";
-import { markdownToHtml, stripBadges } from "@/lib/markdown";
+import {
+	markdownToHtml,
+	resolveMarkdownImageUrls,
+	stripBadges,
+} from "@/lib/markdown";
 import { FiGithub } from "react-icons/fi";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 
@@ -31,8 +35,12 @@ export default async function ProjectDetailPage({ params }: Props) {
 
 	if (!repo) notFound();
 
+	const rawBase = `https://raw.githubusercontent.com/${repo.full_name.split("/")[0]}/${repo.name}/${repo.default_branch}`;
+
 	// Process the README
-	const cleanReadme = repo.readme ? stripBadges(repo.readme) : null;
+	const cleanReadme = repo.readme
+		? resolveMarkdownImageUrls(stripBadges(repo.readme), rawBase)
+		: null;
 
 	// Convert Markdown to HTML (full README and run section)
 	const readmeHtml = cleanReadme ? await markdownToHtml(cleanReadme) : null;
