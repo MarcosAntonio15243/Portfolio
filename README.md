@@ -31,7 +31,7 @@ This portfolio showcases some of the projects I've built as a **Full-Stack Devel
 
 It reflects my commitment to building applications that focus on **performance**, **accessibility**, and **responsive design**, while demonstrating my ability to design clean interfaces and implement scalable backend architectures.
 
-🔗 [**View the live portfolio here**](https://marcosantonio15243.github.io/)
+🔗 [**View the live portfolio here**](https://marcos-antonio-portfolio.vercel.app/)
 
 ## Technologies
 
@@ -65,10 +65,10 @@ Want to run the project locally? Follow the steps below:
 
 ```bash
 # Clone the repository (example using SSH)
-git clone https://github.com/MarcosAntonio15243/MarcosAntonio15243.github.io.git
+git clone git@github.com:MarcosAntonio15243/Portfolio.git
 
 # Navigate to the folder
-cd MarcosAntonio15243.github.io
+cd Portfolio
 
 # Install dependencies
 npm install
