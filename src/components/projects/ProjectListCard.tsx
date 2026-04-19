@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { GithubRepo } from "@/lib/github";
 import { LANGUAGE_COLORS } from "@/lib/github";
+import { LocaleDate } from "../date/LocaleDate";
 
 interface ProjectListCardProps {
 	repo: GithubRepo;
@@ -20,10 +21,6 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 	);
 
 	const langColor = repo.language ? LANGUAGE_COLORS[repo.language] : null;
-	const updatedAt = new Date(repo.updated_at).toLocaleDateString(undefined, {
-		month: "short",
-		year: "numeric",
-	});
 
 	return (
 		<Link
@@ -99,9 +96,11 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 							</span>
 						)}
 					</div>
-					<span className="text-[10px] text-[var(--color-gray-400)] font-roboto">
-						{updatedAt}
-					</span>
+					<LocaleDate
+						dateString={repo.updated_at}
+						options={{ month: "short", year: "numeric" }}
+						className="text-[10px] text-[var(--color-gray-400)] font-roboto"
+					/>
 				</div>
 			</div>
 			<div className="px-4 pb-3 flex items-center gap-1 text-xs font-medium text-[var(--color-link)] font-roboto opacity-0 group-hover:opacity-100 transition-opacity -mt-1">

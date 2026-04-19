@@ -1,12 +1,14 @@
 "use client";
 
-interface LocaleDateProps {
+interface LocaleDateProps extends React.HTMLAttributes<HTMLSpanElement> {
 	dateString: string;
 	options?: Intl.DateTimeFormatOptions;
 }
 
-export function LocaleDate({ dateString, options }: LocaleDateProps) {
+export function LocaleDate({ dateString, options, ...props }: LocaleDateProps) {
 	return (
-		<span>{new Date(dateString).toLocaleDateString(undefined, options)}</span>
+		<span {...props}>
+			{new Date(dateString).toLocaleDateString("en", options)}
+		</span>
 	);
 }
