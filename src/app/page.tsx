@@ -2,13 +2,14 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { CiLinkedin } from "react-icons/ci";
 import { FiGithub } from "react-icons/fi";
-import { IoDocumentTextOutline, IoLocationOutline } from "react-icons/io5";
+import { IoLocationOutline } from "react-icons/io5";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { ExperienceCard, ProjectCard } from "@/components/cards";
 import { experiences, projects } from "@/components/data";
 import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
 import Link from "next/link";
+import { CurriculumVitaeDropdown } from "@/components/dropdown";
 
 export default function Home() {
 	const currentYear = new Date().getFullYear();
@@ -64,19 +65,7 @@ export default function Home() {
 							<IoLocationOutline className="sm:text-xl" size={16} /> Campina
 							Grande, Paraiba, Brazil
 						</div>
-						<a
-							href="https://drive.google.com/file/d/1HeaBC2AmN5ydfGGdcCVJ_gW78S_udKHE/view?usp=sharing"
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="Link to Curriculum Vitae of Marcos"
-							className="font-roboto hover:underline"
-						>
-							<span className="flex items-center gap-1 flex-row">
-								<span className="capitalize font-medium">Curriculum Vitae</span>
-								<IoDocumentTextOutline size={15} />
-								<ArrowUpRight className="size-4" />
-							</span>
-						</a>
+						<CurriculumVitaeDropdown />
 					</div>
 
 					{/* About Me Section */}

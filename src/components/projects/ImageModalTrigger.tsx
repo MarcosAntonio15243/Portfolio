@@ -16,7 +16,7 @@ export function ImageModalTrigger({ src, index }: ImageModalTriggerProps) {
 		<>
 			<button
 				onClick={() => setOpen(true)}
-				aria-label={`Ampliar screenshot ${index + 1}`}
+				aria-label={`View screenshot ${index + 1}`}
 				className="group relative aspect-video overflow-hidden border-[1px] border-[var(--color-bg-image)] cursor-zoom-in w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-dark-blue)]"
 			>
 				<Image
@@ -29,7 +29,7 @@ export function ImageModalTrigger({ src, index }: ImageModalTriggerProps) {
 				/>
 				<div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
 					<span className="bg-white/90 text-black text-xs font-medium px-3 py-1.5 rounded-full">
-						🔍 Ampliar
+						🔍 View
 					</span>
 				</div>
 			</button>
