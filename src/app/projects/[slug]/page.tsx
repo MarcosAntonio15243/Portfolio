@@ -19,6 +19,7 @@ import {
 } from "@/lib/markdown";
 import { FiGithub } from "react-icons/fi";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
+import { LocaleDate } from "@/components/date/LocaleDate";
 
 export const revalidate = 0;
 
@@ -56,12 +57,6 @@ export default async function ProjectDetailPage({ params }: Props) {
 	// Main image: og-image or first image from README
 	const mainImage = repo.open_graph_image_url || repo.images[0] || null;
 	const galleryImages = repo.images.slice(0, 6); // max 6 images
-
-	const updatedAt = new Date(repo.updated_at).toLocaleDateString("en", {
-		day: "2-digit",
-		month: "long",
-		year: "numeric",
-	});
 
 	return (
 		<div>
@@ -116,7 +111,17 @@ export default async function ProjectDetailPage({ params }: Props) {
 										{repo.forks_count}
 									</span>
 								)}
-								<span className="text-xs">Last updated: {updatedAt}</span>
+								<span className="text-xs flex gap-1">
+									Last updated:
+									<LocaleDate
+										dateString={repo.updated_at}
+										options={{
+											day: "2-digit",
+											month: "long",
+											year: "numeric",
+										}}
+									/>
+								</span>
 							</div>
 
 							<div className="flex items-center gap-3 ml-auto">
