@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { HTMLAttributes } from "react";
 import { FiGithub } from "react-icons/fi";
 import { ImageModal } from "./ImageModal";
+import Link from "next/link";
 
 interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
 	srcImg: string;
@@ -13,7 +14,6 @@ interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
 	projectTitle: string;
 	description: string;
 	tecnologies: string[];
-	repositoryLink: string;
 }
 
 export function ProjectCard({
@@ -22,7 +22,6 @@ export function ProjectCard({
 	projectTitle,
 	description,
 	tecnologies,
-	repositoryLink,
 	...props
 }: ProjectCardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,10 +62,8 @@ export function ProjectCard({
 					<h3 className="max-md:my-2">{projectTitle}</h3>
 					<p className="text-sm md:text-base">{description}</p>
 					<div className="flex flex-col gap-2 justify-center items-center md:items-start">
-						<a
-							href={repositoryLink}
-							target="_blank"
-							rel="noopener noreferrer"
+						<Link
+							href={`/projects/${projectTitle.toLowerCase().replace(/ /g, "-")}`}
 							aria-label="Link to repository at project in GitHub"
 						>
 							<span className="font-roboto underline underline-offset-4 gap-1 flex flex-row items-center text-sm font-medium text-[var(--color-link)] hover:text-[var(--color-gray-600)]">
@@ -74,7 +71,7 @@ export function ProjectCard({
 								<FiGithub />
 								<ArrowUpRight className="size-4" />
 							</span>
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>

@@ -163,7 +163,6 @@ export default function Home() {
 										projectTitle={e.projectTitle}
 										description={e.description}
 										tecnologies={e.tecnologies}
-										repositoryLink={e.repositoryLink}
 									/>
 								);
 							})}
