@@ -7,7 +7,7 @@ interface ReadmeViewerProps {
 export function ReadmeViewer({ html, className = "" }: ReadmeViewerProps) {
 	return (
 		<div
-			className={`readme-content font-roboto leading-relaxed ${className}`}
+			className={`readme-content font-roboto leading-relaxed overflow-x-hidden min-w-0 w-full ${className}`}
 			dangerouslySetInnerHTML={{ __html: html }}
 		/>
 	);
