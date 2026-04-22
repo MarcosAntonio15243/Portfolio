@@ -10,9 +10,12 @@ import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
 import Link from "next/link";
 import { CurriculumVitaeDropdown } from "@/components/dropdown";
+import { enrichProjectsWithOgImages } from "@/lib/github";
 
-export default function Home() {
+export default async function Home() {
 	const currentYear = new Date().getFullYear();
+
+	const enrichedProjects = await enrichProjectsWithOgImages(projects);
 
 	return (
 		<div>
@@ -155,7 +158,7 @@ export default function Home() {
 						</div>
 
 						<div className="flex flex-col gap-8 my-5">
-							{projects.map((e, index) => {
+							{enrichedProjects.map((e, index) => {
 								return (
 									<ProjectCard
 										key={`${index}-${e.projectTitle}`}

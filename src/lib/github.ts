@@ -154,7 +154,7 @@ export async function getRepoDetail(slug: string): Promise<RepoDetail | null> {
 	// Extract images from README (absolute and relative links converted)
 	const images = extractImagesFromReadme(readme, repo);
 
-	const ogImage = await fetchOgImage(repo.full_name);
+	const ogImage = await fetchOgImageWithRetry(repo.full_name);
 
 	return { ...repo, readme, languages, images, open_graph_image_url: ogImage };
 }
@@ -195,20 +195,26 @@ function resolveImageUrl(url: string, rawBase: string): string | null {
 	return `${rawBase}${url}`;
 }
 
-// Fetch Open Graph image from repository page (without retry)
-async function fetchOgImage(repoFullName: string): Promise<string | null> {
-	try {
-		const res = await fetch(`https://github.com/${repoFullName}`, {
-			headers: { "User-Agent": "portfolio-bot" },
-			next: { revalidate: 3600 },
-		});
-		if (!res.ok) return null;
-		const html = await res.text();
-		const match = html.match(/<meta property="og:image"\s+content="([^"]+)"/);
-		return match?.[1] ?? null;
-	} catch {
-		return null;
-	}
+// Search OG images for a list of hardcoded repositories
+export async function enrichProjectsWithOgImages<
+	T extends { repositoryLink: string; srcImg: string },
+>(projects: T[]): Promise<T[]> {
+	const enriched = await Promise.all(
+		projects.map(async (project) => {
+			const match = project.repositoryLink.match(/github\.com\/([^/]+\/[^/]+)/);
+			if (!match) return project;
+
+			const fullName = match[1];
+			const ogImage = await fetchOgImageWithRetry(fullName);
+
+			return {
+				...project,
+				srcImg: ogImage ?? project.srcImg,
+			};
+		}),
+	);
+
+	return enriched;
 }
 
 // Color by language (for the badges)
