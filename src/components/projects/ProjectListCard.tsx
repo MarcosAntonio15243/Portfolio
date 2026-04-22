@@ -103,7 +103,7 @@ export function ProjectListCard({ repo }: ProjectListCardProps) {
 					/>
 				</div>
 			</div>
-			<div className="px-4 pb-3 flex items-center gap-1 text-xs font-medium text-[var(--color-link)] font-roboto opacity-0 group-hover:opacity-100 transition-opacity -mt-1">
+			<div className="px-4 pb-3 flex items-center gap-1 text-xs font-medium text-[var(--color-link)] font-roboto transition-opacity -mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
 				See more <ArrowUpRight className="size-3" />
 			</div>
 		</Link>

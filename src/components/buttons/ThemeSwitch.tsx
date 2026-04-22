@@ -9,7 +9,8 @@ export function ThemeSwitch() {
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => setMounted(true), []);
-	if (!mounted) return null;
+	if (!mounted)
+		return <div className="h-6 w-12 rounded-full bg-[var(--color-border)]" />;
 
 	const isDark = resolvedTheme === "dark";
 
