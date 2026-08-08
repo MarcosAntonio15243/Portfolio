@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/providers";
 import "./globals.css";
 import type { Metadata } from "next";
 import { DM_Serif_Display, Roboto, Source_Serif_4 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 const roboto = Roboto({
 	variable: "--font-roboto",
@@ -45,6 +46,7 @@ export default function RootLayout({
 				>
 					{children}
 				</ThemeProvider>
+				<Analytics />
 			</body>
 		</html>
 	);
