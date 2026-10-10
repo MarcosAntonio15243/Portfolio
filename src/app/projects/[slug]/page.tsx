@@ -15,6 +15,7 @@ import { Header } from "@/components/layout";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { RepoTabs } from "@/components/projects/RepoTabs";
+import { JsonLd } from "@/components/seo";
 import { Divider, TechnologyDot } from "@/components/ui";
 import { getRepoDetail, getRepoMeta, LANGUAGE_COLORS } from "@/lib/github";
 import {
@@ -32,7 +33,12 @@ import {
 	tabId,
 } from "@/lib/projects";
 import { getProjectBySlug } from "@/lib/sanity/queries";
-import { pageMetadata } from "@/lib/seo";
+import {
+	buildBreadcrumbJsonLd,
+	buildProjectJsonLd,
+	pageMetadata,
+} from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site";
 
 interface Props {
 	params: Promise<{ slug: string }>;
@@ -122,6 +128,26 @@ export default async function ProjectDetailPage({
 
 	return (
 		<div>
+			<JsonLd
+				data={buildProjectJsonLd({
+					name: project.title,
+					description,
+					url: absoluteUrl(`/projects/${project.slug}`),
+					repositories: repos.map((r) => `https://github.com/${r.full}`),
+					languages: technologies.map((t) => t.name),
+					authorUrl: absoluteUrl("/"),
+				})}
+			/>
+			<JsonLd
+				data={buildBreadcrumbJsonLd([
+					{ name: "Home", url: absoluteUrl("/") },
+					{ name: "Projects", url: absoluteUrl("/projects") },
+					{
+						name: project.title,
+						url: absoluteUrl(`/projects/${project.slug}`),
+					},
+				])}
+			/>
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
 				<div className="mx-6 max-content-w flex flex-col gap-10 py-10">

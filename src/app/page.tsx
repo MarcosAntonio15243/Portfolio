@@ -10,16 +10,17 @@ import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { ExperienceCard, ProjectCard } from "@/components/cards";
 import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { Header } from "@/components/layout";
+import { JsonLd } from "@/components/seo";
 import { Divider } from "@/components/ui";
 import { resolveProjectCard } from "@/lib/project-data";
-import { formatMonthYear } from "@/lib/projects";
+import { cleanTechnologies, formatMonthYear } from "@/lib/projects";
 import {
 	getExperiences,
 	getFeaturedProjects,
 	getSiteSettings,
 } from "@/lib/sanity/queries";
-import { pageMetadata } from "@/lib/seo";
-import { DEFAULT_DESCRIPTION } from "@/lib/site";
+import { buildPersonJsonLd, buildWebSiteJsonLd, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -43,9 +44,27 @@ export default async function Home() {
 		getFeaturedProjects(),
 	]);
 	const projects = await Promise.all(featured.map(resolveProjectCard));
+	const skills = [
+		...new Set(
+			featured.flatMap((p) =>
+				cleanTechnologies(p.technologies).map((t) => t.name),
+			),
+		),
+	].slice(0, 15);
 
 	return (
 		<div>
+			<JsonLd
+				data={buildPersonJsonLd({
+					url: absoluteUrl("/"),
+					image: settings?.profileImageUrl,
+					github: settings?.githubUrl,
+					linkedin: settings?.linkedinUrl,
+					location: settings?.location,
+					skills,
+				})}
+			/>
+			<JsonLd data={buildWebSiteJsonLd(absoluteUrl("/"))} />
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
 				<div
