@@ -3,7 +3,7 @@ import {
 	orderRankOrdering,
 } from "@sanity/orderable-document-list";
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { normalizeRepo } from "@/lib/projects";
+import { normalizeRepo } from "@/lib/projects/helpers";
 
 export const project = defineType({
 	name: "project",

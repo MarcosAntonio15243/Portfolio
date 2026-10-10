@@ -8,7 +8,7 @@ import {
 	resolveDescription,
 	selectRepo,
 	tabId,
-} from "./projects";
+} from "./helpers";
 
 describe("normalizeRepo", () => {
 	it.each([

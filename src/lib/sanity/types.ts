@@ -1,5 +1,5 @@
 import type { PortableTextBlock } from "next-sanity";
-import type { RepoRef } from "@/lib/projects";
+import type { RepoRef } from "@/lib/projects/helpers";
 
 export interface TechnologyDoc {
 	name: string;
@@ -14,6 +14,7 @@ export interface ProjectDoc {
 	technologies: (TechnologyDoc | null)[] | null;
 	coverUrl: string | null;
 	featured: boolean | null;
+	updatedAt: string;
 	repositories: RepoRef[];
 }
 
@@ -31,6 +32,7 @@ export interface SiteSettingsDoc {
 	headline: string | null;
 	subheadline: string | null;
 	intro: string | null;
+	seoDescription: string | null;
 	location: string | null;
 	email: string | null;
 	githubUrl: string | null;

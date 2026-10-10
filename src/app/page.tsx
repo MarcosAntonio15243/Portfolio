@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "next-sanity";
@@ -9,16 +10,31 @@ import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { ExperienceCard, ProjectCard } from "@/components/cards";
 import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { Header } from "@/components/layout";
+import { JsonLd } from "@/components/seo";
 import { Divider } from "@/components/ui";
-import { resolveProjectCard } from "@/lib/project-data";
-import { formatMonthYear } from "@/lib/projects";
+import { resolveProjectCard } from "@/lib/projects/card-data";
+import { cleanTechnologies, formatMonthYear } from "@/lib/projects/helpers";
 import {
 	getExperiences,
 	getFeaturedProjects,
 	getSiteSettings,
 } from "@/lib/sanity/queries";
+import { buildPersonJsonLd, buildWebSiteJsonLd } from "@/lib/seo/json-ld";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/seo/site";
 
 export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+	const settings = await getSiteSettings();
+	return pageMetadata({
+		description:
+			settings?.seoDescription?.trim() ||
+			settings?.intro?.trim() ||
+			DEFAULT_DESCRIPTION,
+		path: "/",
+	});
+}
 
 export default async function Home() {
 	const currentYear = new Date().getFullYear();
@@ -29,9 +45,27 @@ export default async function Home() {
 		getFeaturedProjects(),
 	]);
 	const projects = await Promise.all(featured.map(resolveProjectCard));
+	const skills = [
+		...new Set(
+			featured.flatMap((p) =>
+				cleanTechnologies(p.technologies).map((t) => t.name),
+			),
+		),
+	].slice(0, 15);
 
 	return (
 		<div>
+			<JsonLd
+				data={buildPersonJsonLd({
+					url: absoluteUrl("/"),
+					image: settings?.profileImageUrl,
+					github: settings?.githubUrl,
+					linkedin: settings?.linkedinUrl,
+					location: settings?.location,
+					skills,
+				})}
+			/>
+			<JsonLd data={buildWebSiteJsonLd(absoluteUrl("/"))} />
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
 				<div
