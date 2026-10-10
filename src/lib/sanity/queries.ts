@@ -42,7 +42,7 @@ export async function getProjectBySlug(
 
 export async function getExperiences(): Promise<ExperienceDoc[]> {
 	return client.fetch(
-		`*[_type == "experience"] | order(dateStart desc){_id, jobTitle, enterprise, dateStart, dateEnd, description}`,
+		`*[_type == "experience"] | order(orderRank asc, dateStart desc){_id, jobTitle, enterprise, dateStart, dateEnd, description}`,
 		{},
 		{ next: { tags: ["experience"], revalidate: REVALIDATE_SECONDS } },
 	);

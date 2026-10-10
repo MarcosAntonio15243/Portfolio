@@ -36,7 +36,12 @@ export default defineConfig({
 							S,
 							context,
 						}),
-						S.documentTypeListItem("experience").title("Experiences"),
+						orderableDocumentListDeskItem({
+							type: "experience",
+							title: "Experiences",
+							S,
+							context,
+						}),
 						S.documentTypeListItem("technology").title("Technologies"),
 					]),
 		}),

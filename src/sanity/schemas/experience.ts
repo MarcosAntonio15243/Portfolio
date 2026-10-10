@@ -1,3 +1,7 @@
+import {
+	orderRankField,
+	orderRankOrdering,
+} from "@sanity/orderable-document-list";
 import { defineField, defineType } from "sanity";
 
 export const experience = defineType({
@@ -31,8 +35,11 @@ export const experience = defineType({
 			rows: 5,
 			validation: (r) => r.required(),
 		}),
+		// Drag and drop order, edited from the Experiences list in the Studio
+		orderRankField({ type: "experience" }),
 	],
 	orderings: [
+		orderRankOrdering,
 		{
 			title: "Start date, newest first",
 			name: "dateStartDesc",
