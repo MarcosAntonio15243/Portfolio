@@ -27,8 +27,14 @@ export const project = defineType({
 		defineField({
 			name: "technologies",
 			type: "array",
-			of: [{ type: "string" }],
-			options: { layout: "tags" },
+			description:
+				"The listing card shows the first 3, so put the most relevant first.",
+			of: [
+				defineArrayMember({
+					type: "reference",
+					to: [{ type: "technology" }],
+				}),
+			],
 		}),
 		defineField({
 			name: "cover",

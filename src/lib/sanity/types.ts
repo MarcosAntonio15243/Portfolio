@@ -1,12 +1,17 @@
 import type { PortableTextBlock } from "next-sanity";
 import type { RepoRef } from "@/lib/projects";
 
+export interface TechnologyDoc {
+	name: string;
+	color: string | null;
+}
+
 export interface ProjectDoc {
 	_id: string;
 	title: string;
 	slug: string;
 	summary: string | null;
-	technologies: string[] | null;
+	technologies: (TechnologyDoc | null)[] | null;
 	coverUrl: string | null;
 	featured: boolean | null;
 	order: number | null;

@@ -1,5 +1,6 @@
 "use client";
 
+import { colorInput } from "@sanity/color-input";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { dataset, projectId } from "@/sanity/env";
@@ -13,6 +14,7 @@ export default defineConfig({
 	dataset,
 	schema: { types: schemaTypes },
 	plugins: [
+		colorInput(),
 		structureTool({
 			structure: (S) =>
 				S.list()
@@ -29,6 +31,7 @@ export default defineConfig({
 						S.divider(),
 						S.documentTypeListItem("project").title("Projects"),
 						S.documentTypeListItem("experience").title("Experiences"),
+						S.documentTypeListItem("technology").title("Technologies"),
 					]),
 		}),
 	],

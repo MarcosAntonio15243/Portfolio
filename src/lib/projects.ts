@@ -59,3 +59,17 @@ export function formatMonthYear(isoDate: string): string {
 		timeZone: "UTC",
 	});
 }
+
+export const TECHNOLOGY_FALLBACK_COLOR = "#888";
+
+export interface Technology {
+	name: string;
+	color: string | null;
+}
+
+// Drops broken references (null) and entries without a name
+export function cleanTechnologies(
+	list: (Technology | null)[] | null | undefined,
+): Technology[] {
+	return (list ?? []).filter((t): t is Technology => Boolean(t?.name));
+}

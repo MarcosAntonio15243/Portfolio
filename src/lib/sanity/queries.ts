@@ -6,7 +6,7 @@ const PROJECT_FIELDS = `
 	title,
 	"slug": slug.current,
 	summary,
-	technologies,
+	technologies[]->{ name, "color": color.hex },
 	"coverUrl": cover.asset->url,
 	featured,
 	order,

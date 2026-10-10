@@ -14,7 +14,7 @@ import { Header } from "@/components/layout";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { RepoTabs } from "@/components/projects/RepoTabs";
-import { Divider } from "@/components/ui";
+import { Divider, TechnologyDot } from "@/components/ui";
 import { getRepoDetail, getRepoMeta, LANGUAGE_COLORS } from "@/lib/github";
 import {
 	markdownToHtml,
@@ -22,6 +22,7 @@ import {
 	stripBadges,
 } from "@/lib/markdown";
 import {
+	cleanTechnologies,
 	normalizeRepo,
 	pickMainImage,
 	resolveDescription,
@@ -62,6 +63,7 @@ export default async function ProjectDetailPage({
 	const tabs = repos.map((r) => ({ id: tabId(r.label), label: r.label }));
 
 	const repo = await getRepoDetail(selected.repo);
+	const technologies = cleanTechnologies(project.technologies);
 
 	// Description: CMS summary, then GitHub descriptions in array order
 	const fallbackDescriptions = project.summary?.trim()
@@ -119,14 +121,15 @@ export default async function ProjectDetailPage({
 					{/* Project Header */}
 					<section className="flex flex-col gap-4">
 						{/* Technologies */}
-						{(project.technologies ?? []).length > 0 && (
+						{technologies.length > 0 && (
 							<div className="flex flex-wrap gap-1.5">
-								{(project.technologies ?? []).map((tech) => (
+								{technologies.map((tech) => (
 									<span
-										key={tech}
-										className="text-[10px] font-roboto uppercase tracking-widest px-2 py-0.5 border-[1px] border-[var(--color-border)] text-[var(--color-gray-400)]"
+										key={tech.name}
+										className="flex items-center gap-1.5 text-[10px] font-roboto uppercase tracking-widest px-2 py-0.5 border-[1px] border-[var(--color-border)] text-[var(--color-gray-400)]"
 									>
-										{tech}
+										<TechnologyDot color={tech.color} />
+										{tech.name}
 									</span>
 								))}
 							</div>

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+	cleanTechnologies,
 	DEFAULT_DESCRIPTION,
 	formatMonthYear,
 	normalizeRepo,
@@ -84,5 +85,24 @@ describe("formatMonthYear", () => {
 		expect(formatMonthYear("2025-08-01")).toBe("Aug 2025");
 		expect(formatMonthYear("2021-10-31")).toBe("Oct 2021");
 		expect(formatMonthYear("2023-01-01")).toBe("Jan 2023");
+	});
+});
+
+describe("cleanTechnologies", () => {
+	it("drops null and nameless entries and keeps order", () => {
+		const result = cleanTechnologies([
+			{ name: "NextJs", color: "#000000" },
+			null,
+			{ name: "", color: "#ffffff" },
+			{ name: "Zod", color: null },
+		]);
+		expect(result).toEqual([
+			{ name: "NextJs", color: "#000000" },
+			{ name: "Zod", color: null },
+		]);
+	});
+	it("returns an empty list for missing input", () => {
+		expect(cleanTechnologies(null)).toEqual([]);
+		expect(cleanTechnologies(undefined)).toEqual([]);
 	});
 });

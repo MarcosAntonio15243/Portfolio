@@ -7,6 +7,7 @@ import { useState } from "react";
 import { LANGUAGE_COLORS } from "@/lib/github";
 import type { ProjectCardData } from "@/lib/project-data";
 import { LocaleDate } from "../date/LocaleDate";
+import { TechnologyDot } from "../ui";
 
 interface ProjectListCardProps {
 	project: ProjectCardData;
@@ -18,12 +19,17 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
 	const [imageLoaded, setImageLoaded] = useState(false);
 	const [imgSrc, setImgSrc] = useState(project.imageUrl);
 
-	// Main technology only, or the first ones when the CMS lists several
+	// First 3 technologies from the CMS, or the GitHub main language as fallback
 	const technologies =
 		project.technologies.length > 0
 			? project.technologies.slice(0, 3)
 			: project.mainLanguage
-				? [project.mainLanguage]
+				? [
+						{
+							name: project.mainLanguage,
+							color: LANGUAGE_COLORS[project.mainLanguage] ?? null,
+						},
+					]
 				: [];
 
 	return (
@@ -62,12 +68,9 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
 				<div className="flex items-center justify-between gap-3 mt-auto pt-3 border-t-[1px] border-[var(--color-border)]">
 					<div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--color-gray-400)]">
 						{technologies.map((tech) => (
-							<span key={tech} className="flex items-center gap-1">
-								<span
-									className="inline-block w-2.5 h-2.5 rounded-full"
-									style={{ backgroundColor: LANGUAGE_COLORS[tech] || "#888" }}
-								/>
-								{tech}
+							<span key={tech.name} className="flex items-center gap-1">
+								<TechnologyDot color={tech.color} />
+								{tech.name}
 							</span>
 						))}
 					</div>

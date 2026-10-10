@@ -1,8 +1,10 @@
 import { fetchOgImageWithRetry, getRepoMeta } from "@/lib/github";
 import {
+	cleanTechnologies,
 	normalizeRepo,
 	pickMainImage,
 	resolveDescription,
+	type Technology,
 } from "@/lib/projects";
 import type { ProjectDoc } from "@/lib/sanity/types";
 
@@ -13,7 +15,7 @@ export interface ProjectCardData {
 	title: string;
 	description: string;
 	imageUrl: string;
-	technologies: string[];
+	technologies: Technology[];
 	mainLanguage: string | null;
 	updatedAt: string | null;
 }
@@ -49,7 +51,7 @@ export async function resolveProjectCard(
 			{ coverUrl: project.coverUrl, ogImage },
 			PLACEHOLDER_SVG,
 		),
-		technologies: project.technologies ?? [],
+		technologies: cleanTechnologies(project.technologies),
 		mainLanguage: metas[0]?.language ?? null,
 		updatedAt,
 	};
