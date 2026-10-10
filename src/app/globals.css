@@ -107,6 +107,17 @@ p {
 	color: var(--color-primary);
 }
 
+/* Smaller page title on mobile */
+.page-title {
+	font-size: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+	.page-title {
+		font-size: 2rem;
+	}
+}
+
 .button {
 	color: var(--color-fg-button);
 	background-color: var(--color-bg-button);

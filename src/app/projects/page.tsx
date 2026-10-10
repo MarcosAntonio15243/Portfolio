@@ -18,14 +18,16 @@ export default async function ProjectsPage() {
 			<main className="pt-12 flex flex-col justify-center items-center">
 				<div className="mx-6 max-content-w flex flex-col gap-10 py-10">
 					<section className="flex flex-row justify-between gap-3">
-						<h1 className="name">All Projects</h1>
+						<h1 className="name page-title">All Projects</h1>
 						<a
 							href="https://github.com/MarcosAntonio15243?tab=repositories"
 							target="_blank"
 							rel="noopener noreferrer"
+							aria-label="See all repositories on GitHub"
 							className="flex items-center gap-1.5 text-sm font-roboto underline underline-offset-4 text-[var(--color-link)] w-fit"
 						>
-							See all on GitHub
+							<span className="sm:hidden">GitHub</span>
+							<span className="max-sm:hidden">See all on GitHub</span>
 							<FiGithub className="size-4" />
 							<ArrowUpRight className="size-4" />
 						</a>
