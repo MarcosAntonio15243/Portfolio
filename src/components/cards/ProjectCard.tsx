@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { HTMLAttributes } from "react";
 import { useState } from "react";
-import type { Technology } from "@/lib/projects";
+import type { Technology } from "@/lib/projects/helpers";
 import { TechnologyDot } from "../ui";
 import { ImageModal } from "./ImageModal";
 

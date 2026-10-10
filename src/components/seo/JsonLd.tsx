@@ -1,4 +1,4 @@
-import { serializeJsonLd } from "@/lib/seo";
+import { serializeJsonLd } from "@/lib/seo/json-ld";
 
 // The payload is built by our own helpers and "<" is escaped, so it cannot
 // close the script tag

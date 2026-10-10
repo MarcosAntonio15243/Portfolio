@@ -2,10 +2,10 @@ import { ArrowUpRight } from "lucide-react";
 import { FiGithub } from "react-icons/fi";
 import { Header } from "@/components/layout";
 import { ProjectListCard } from "@/components/projects/ProjectListCard";
-import { resolveProjectCard } from "@/lib/project-data";
+import { resolveProjectCard } from "@/lib/projects/card-data";
 import { getAllProjects } from "@/lib/sanity/queries";
-import { pageMetadata } from "@/lib/seo";
-import { PROJECTS_DESCRIPTION } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { PROJECTS_DESCRIPTION } from "@/lib/seo/site";
 
 export const revalidate = 60;
 

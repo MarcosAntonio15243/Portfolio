@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OWNER_JOB_TITLE, SITE_NAME } from "@/lib/site";
+import { OWNER_JOB_TITLE, SITE_NAME } from "@/lib/seo/site";
 
 export const alt = "Marcos Antonio, Full-Stack Developer";
 export const size = { width: 1200, height: 630 };

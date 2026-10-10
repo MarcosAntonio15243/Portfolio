@@ -23,7 +23,7 @@ import {
 	resolveMarkdownImageUrls,
 	stripBadges,
 } from "@/lib/markdown";
-import { resolveProjectDescription } from "@/lib/project-data";
+import { resolveProjectDescription } from "@/lib/projects/card-data";
 import {
 	cleanTechnologies,
 	normalizeRepo,
@@ -31,14 +31,11 @@ import {
 	resolveDescription,
 	selectRepo,
 	tabId,
-} from "@/lib/projects";
+} from "@/lib/projects/helpers";
 import { getProjectBySlug } from "@/lib/sanity/queries";
-import {
-	buildBreadcrumbJsonLd,
-	buildProjectJsonLd,
-	pageMetadata,
-} from "@/lib/seo";
-import { absoluteUrl } from "@/lib/site";
+import { buildBreadcrumbJsonLd, buildProjectJsonLd } from "@/lib/seo/json-ld";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { absoluteUrl } from "@/lib/seo/site";
 
 interface Props {
 	params: Promise<{ slug: string }>;

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { LANGUAGE_COLORS } from "@/lib/github";
-import type { ProjectCardData } from "@/lib/project-data";
+import type { ProjectCardData } from "@/lib/projects/card-data";
 import { LocaleDate } from "../date/LocaleDate";
 import { TechnologyDot } from "../ui";
 

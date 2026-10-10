@@ -1,6 +1,6 @@
-import { buildLlmsFullTxt } from "@/lib/llms";
-import { loadLlmsData } from "@/lib/llms-data";
-import { SITE_URL } from "@/lib/site";
+import { buildLlmsFullTxt } from "@/lib/llms/format";
+import { loadLlmsData } from "@/lib/llms/load";
+import { SITE_URL } from "@/lib/seo/site";
 
 export const revalidate = 3600;
 

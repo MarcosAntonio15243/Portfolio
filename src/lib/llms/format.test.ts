@@ -4,7 +4,7 @@ import {
 	buildLlmsTxt,
 	type LlmsData,
 	portableTextToPlain,
-} from "./llms";
+} from "./format";
 
 const SITE = "https://example.dev";
 

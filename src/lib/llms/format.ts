@@ -1,5 +1,5 @@
-import { formatMonthYear } from "./projects";
-import { absoluteUrl } from "./site";
+import { formatMonthYear } from "@/lib/projects/helpers";
+import { absoluteUrl } from "@/lib/seo/site";
 
 export interface LlmsExperience {
 	jobTitle: string;

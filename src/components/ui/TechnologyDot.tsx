@@ -1,4 +1,4 @@
-import { TECHNOLOGY_FALLBACK_COLOR } from "@/lib/projects";
+import { TECHNOLOGY_FALLBACK_COLOR } from "@/lib/projects/helpers";
 
 export function TechnologyDot({ color }: { color: string | null }) {
 	return (

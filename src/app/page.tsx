@@ -12,15 +12,16 @@ import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { Header } from "@/components/layout";
 import { JsonLd } from "@/components/seo";
 import { Divider } from "@/components/ui";
-import { resolveProjectCard } from "@/lib/project-data";
-import { cleanTechnologies, formatMonthYear } from "@/lib/projects";
+import { resolveProjectCard } from "@/lib/projects/card-data";
+import { cleanTechnologies, formatMonthYear } from "@/lib/projects/helpers";
 import {
 	getExperiences,
 	getFeaturedProjects,
 	getSiteSettings,
 } from "@/lib/sanity/queries";
-import { buildPersonJsonLd, buildWebSiteJsonLd, pageMetadata } from "@/lib/seo";
-import { absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/site";
+import { buildPersonJsonLd, buildWebSiteJsonLd } from "@/lib/seo/json-ld";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/seo/site";
 
 export const revalidate = 3600;
 

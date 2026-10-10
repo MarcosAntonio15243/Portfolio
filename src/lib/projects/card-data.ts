@@ -5,7 +5,7 @@ import {
 	pickMainImage,
 	resolveDescription,
 	type Technology,
-} from "@/lib/projects";
+} from "@/lib/projects/helpers";
 import type { ProjectDoc } from "@/lib/sanity/types";
 
 export const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";

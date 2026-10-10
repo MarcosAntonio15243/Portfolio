@@ -4,7 +4,7 @@ import {
 	OWNER_JOB_TITLE,
 	SITE_NAME,
 	SITE_URL,
-} from "@/lib/site";
+} from "@/lib/seo/site";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";

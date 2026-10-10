@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
-import { cleanTechnologies } from "@/lib/projects";
+import { cleanTechnologies } from "@/lib/projects/helpers";
 import { getProjectBySlug } from "@/lib/sanity/queries";
-import { truncate } from "@/lib/seo";
-import { SITE_NAME } from "@/lib/site";
+import { truncate } from "@/lib/seo/metadata";
+import { SITE_NAME } from "@/lib/seo/site";
 
 export const alt = "Project preview";
 export const size = { width: 1200, height: 630 };

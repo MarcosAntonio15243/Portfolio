@@ -1,12 +1,16 @@
-import { type LlmsData, portableTextToPlain } from "@/lib/llms";
-import { resolveProjectDescription } from "@/lib/project-data";
-import { cleanTechnologies, normalizeRepo } from "@/lib/projects";
+import { type LlmsData, portableTextToPlain } from "@/lib/llms/format";
+import { resolveProjectDescription } from "@/lib/projects/card-data";
+import { cleanTechnologies, normalizeRepo } from "@/lib/projects/helpers";
 import {
 	getAllProjects,
 	getExperiences,
 	getSiteSettings,
 } from "@/lib/sanity/queries";
-import { DEFAULT_DESCRIPTION, OWNER_JOB_TITLE, SITE_NAME } from "@/lib/site";
+import {
+	DEFAULT_DESCRIPTION,
+	OWNER_JOB_TITLE,
+	SITE_NAME,
+} from "@/lib/seo/site";
 
 export async function loadLlmsData(): Promise<LlmsData> {
 	const [settings, experiences, projects] = await Promise.all([

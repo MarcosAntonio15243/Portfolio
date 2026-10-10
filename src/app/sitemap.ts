@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllProjects } from "@/lib/sanity/queries";
-import { buildSitemap } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
+import { buildSitemap } from "@/lib/seo/crawlers";
+import { SITE_URL } from "@/lib/seo/site";
 
 export const revalidate = 3600;
 

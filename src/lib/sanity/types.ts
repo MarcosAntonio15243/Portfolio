@@ -1,5 +1,5 @@
 import type { PortableTextBlock } from "next-sanity";
-import type { RepoRef } from "@/lib/projects";
+import type { RepoRef } from "@/lib/projects/helpers";
 
 export interface TechnologyDoc {
 	name: string;
