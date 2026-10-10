@@ -98,12 +98,6 @@ Setup checklist:
 - GitHub -> Settings -> Secrets and variables -> Actions -> Variables: `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`, used by the CI build
 - A project can have several GitHub repositories (for example Front-end and Back-end); they appear as tabs on the project page and the first one is the main repository
 
-To import the initial content into an empty dataset, create a temporary Sanity API token with Editor permission, run it only in the shell and revoke it afterwards:
-
-```bash
-SANITY_WRITE_TOKEN=<token> npm run seed
-```
-
 ## Contributing
 
 Contributions, suggestions, and discussions are always welcome!
