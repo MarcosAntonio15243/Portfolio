@@ -21,6 +21,6 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ revalidated: false }, { status: 200 });
 	}
 
-	revalidateTag(body._type);
+	revalidateTag(body._type, { expire: 0 });
 	return NextResponse.json({ revalidated: true, tag: body._type });
 }
