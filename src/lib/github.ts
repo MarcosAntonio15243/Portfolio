@@ -1,7 +1,8 @@
-import { fetchOgImagesBatch } from "@/app/hooks/useOgImageQueue";
-
-const GITHUB_USERNAME = "MarcosAntonio15243";
 const GITHUB_API = "https://api.github.com";
+// Repositories rarely change and the unauthenticated API allows only 60 calls
+// per hour, so GitHub data is cached for six hours. Only 200 responses are stored,
+// so a rate limit error is never cached and stale data is kept on failure.
+const GITHUB_REVALIDATE_SECONDS = 21600;
 const BADGE_PATTERNS = [
 	/img\.shields\.io/,
 	/badge\.fury\.io/,
@@ -52,30 +53,6 @@ function isBadgeUrl(url: string): boolean {
 	return BADGE_PATTERNS.some((pattern) => pattern.test(url));
 }
 
-// Fetch all public repositories and return only those tagged as "portfolio"
-export async function getPortfolioRepos(): Promise<GithubRepo[]> {
-	const res = await fetch(
-		`${GITHUB_API}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated&type=public`,
-		{ headers, next: { revalidate: 60 } },
-	);
-
-	if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-
-	const repos: GithubRepo[] = await res.json();
-	const portfolio = repos.filter((repo) => repo.topics?.includes("portfolio"));
-
-	// Fetch all Open Graph images in batches to avoid rate limiting
-	const ogImages = await fetchOgImagesBatch(
-		portfolio.map((r) => r.full_name),
-		{ concurrency: 4, retries: 3, baseDelay: 800, jitter: true },
-	);
-
-	return portfolio.map((repo) => ({
-		...repo,
-		open_graph_image_url: ogImages[repo.full_name] ?? null,
-	}));
-}
-
 // Try to fetch the Open Graph image with retry and exponential backoff
 export async function fetchOgImageWithRetry(
 	repoFullName: string,
@@ -86,7 +63,7 @@ export async function fetchOgImageWithRetry(
 		try {
 			const res = await fetch(`https://github.com/${repoFullName}`, {
 				headers: { "User-Agent": "portfolio-bot" },
-				next: { revalidate: 3600 },
+				next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 			});
 
 			if (res.status === 429) {
@@ -116,19 +93,22 @@ export async function fetchOgImageWithRetry(
 }
 
 // Get detailed info for a single repo, including README and languages
-export async function getRepoDetail(slug: string): Promise<RepoDetail | null> {
+export async function getRepoDetail(
+	repoFullName: string,
+): Promise<RepoDetail | null> {
+	const [owner, name] = repoFullName.split("/");
 	const [repoRes, readmeRes, languagesRes] = await Promise.allSettled([
-		fetch(`${GITHUB_API}/repos/${GITHUB_USERNAME}/${slug}`, {
+		fetch(`${GITHUB_API}/repos/${owner}/${name}`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
-		fetch(`${GITHUB_API}/repos/${GITHUB_USERNAME}/${slug}/readme`, {
+		fetch(`${GITHUB_API}/repos/${owner}/${name}/readme`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
-		fetch(`${GITHUB_API}/repos/${GITHUB_USERNAME}/${slug}/languages`, {
+		fetch(`${GITHUB_API}/repos/${owner}/${name}/languages`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
 	]);
 
@@ -164,7 +144,7 @@ function extractImagesFromReadme(
 ): string[] {
 	if (!readme) return [];
 
-	const rawBase = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${repo.name}/${repo.default_branch}`;
+	const rawBase = `https://raw.githubusercontent.com/${repo.full_name.split("/")[0]}/${repo.name}/${repo.default_branch}`;
 	const imgRegex = /!\[.*?\]\((.*?)\)/g;
 	const htmlImgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
 	const found = new Set<string>();
@@ -190,26 +170,26 @@ function resolveImageUrl(url: string, rawBase: string): string | null {
 	return `${rawBase}${url}`;
 }
 
-// Search OG images for a list of hardcoded repositories
-export async function enrichProjectsWithOgImages<
-	T extends { repositoryLink: string; srcImg: string },
->(projects: T[]): Promise<T[]> {
-	const enriched = await Promise.all(
-		projects.map(async (project) => {
-			const match = project.repositoryLink.match(/github\.com\/([^/]+\/[^/]+)/);
-			if (!match) return project;
+export interface RepoMeta {
+	description: string | null;
+	language: string | null;
+	updated_at: string;
+}
 
-			const fullName = match[1];
-			const ogImage = await fetchOgImageWithRetry(fullName);
-
-			return {
-				...project,
-				srcImg: ogImage ?? project.srcImg,
-			};
-		}),
-	);
-
-	return enriched;
+// Light lookup used for card data and the description fallback
+export async function getRepoMeta(
+	repoFullName: string,
+): Promise<RepoMeta | null> {
+	try {
+		const res = await fetch(`${GITHUB_API}/repos/${repoFullName}`, {
+			headers,
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
+		});
+		if (!res.ok) return null;
+		return await res.json();
+	} catch {
+		return null;
+	}
 }
 
 // Color by language (for the badges)

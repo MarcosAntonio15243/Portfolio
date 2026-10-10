@@ -5,18 +5,21 @@ import Image from "next/image";
 import Link from "next/link";
 import type { HTMLAttributes } from "react";
 import { useState } from "react";
-import { FiGithub } from "react-icons/fi";
+import type { Technology } from "@/lib/projects";
+import { TechnologyDot } from "../ui";
 import { ImageModal } from "./ImageModal";
 
 interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
+	slug: string;
 	srcImg: string;
 	altImg?: string;
 	projectTitle: string;
 	description: string;
-	tecnologies: string[];
+	tecnologies: Technology[];
 }
 
 export function ProjectCard({
+	slug,
 	srcImg,
 	altImg = "Featured Project Preview",
 	projectTitle,
@@ -56,20 +59,22 @@ export function ProjectCard({
 
 				<div className="flex flex-col gap-2 py-4 items-center text-center md:items-baseline md:text-left">
 					<div className="font-roboto text-sm text-[var(--color-text-secondary)] font-thin flex flex-row max-md:justify-center flex-wrap w-fit gap-x-5 gap-y-1">
-						{tecnologies.map((e, index) => (
-							<span key={`${index}-${e}`}>{e}</span>
+						{tecnologies.map((tech) => (
+							<span key={tech.name} className="flex items-center gap-1.5">
+								<TechnologyDot color={tech.color} />
+								{tech.name}
+							</span>
 						))}
 					</div>
 					<h3 className="max-md:my-2">{projectTitle}</h3>
 					<p className="text-sm md:text-base">{description}</p>
 					<div className="flex flex-col gap-2 justify-center items-center md:items-start">
 						<Link
-							href={`/projects/${projectTitle.toLowerCase().replace(/ /g, "-")}`}
-							aria-label="Link to repository at project in GitHub"
+							href={`/projects/${slug}`}
+							aria-label={`See more about ${projectTitle}`}
 						>
 							<span className="font-roboto underline underline-offset-4 gap-1 flex flex-row items-center text-sm font-medium text-[var(--color-link)] hover:text-[var(--color-gray-600)]">
 								See more
-								<FiGithub />
 								<ArrowUpRight className="size-4" />
 							</span>
 						</Link>

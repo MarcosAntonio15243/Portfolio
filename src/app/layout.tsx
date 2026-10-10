@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/providers";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { DM_Serif_Display, Roboto, Source_Serif_4 } from "next/font/google";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
 				>
 					{children}
 				</ThemeProvider>
+				<Analytics />
 			</body>
 		</html>
 	);
