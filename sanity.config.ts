@@ -1,6 +1,7 @@
 "use client";
 
 import { colorInput } from "@sanity/color-input";
+import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { dataset, projectId } from "@/sanity/env";
@@ -16,7 +17,7 @@ export default defineConfig({
 	plugins: [
 		colorInput(),
 		structureTool({
-			structure: (S) =>
+			structure: (S, context) =>
 				S.list()
 					.title("Content")
 					.items([
@@ -29,7 +30,12 @@ export default defineConfig({
 									.documentId("siteSettings"),
 							),
 						S.divider(),
-						S.documentTypeListItem("project").title("Projects"),
+						orderableDocumentListDeskItem({
+							type: "project",
+							title: "Projects",
+							S,
+							context,
+						}),
 						S.documentTypeListItem("experience").title("Experiences"),
 						S.documentTypeListItem("technology").title("Technologies"),
 					]),

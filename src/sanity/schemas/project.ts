@@ -1,3 +1,7 @@
+import {
+	orderRankField,
+	orderRankOrdering,
+} from "@sanity/orderable-document-list";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { normalizeRepo } from "@/lib/projects";
 
@@ -43,11 +47,8 @@ export const project = defineType({
 			description: "Optional. If empty, the GitHub Open Graph image is used.",
 		}),
 		defineField({ name: "featured", type: "boolean", initialValue: false }),
-		defineField({
-			name: "order",
-			type: "number",
-			description: "Lower numbers come first.",
-		}),
+		// Drag and drop order, edited from the Projects list in the Studio
+		orderRankField({ type: "project" }),
 		defineField({
 			name: "repositories",
 			type: "array",
@@ -84,5 +85,6 @@ export const project = defineType({
 			],
 		}),
 	],
+	orderings: [orderRankOrdering],
 	preview: { select: { title: "title", subtitle: "summary", media: "cover" } },
 });

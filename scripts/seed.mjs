@@ -102,7 +102,6 @@ const projects = [
 		],
 		cover: "public/assets/project-1.webp",
 		repo: "MarcosAntonio15243/management-platform-for-networking-groups",
-		order: 1,
 	},
 	{
 		slug: "let-me-ask",
@@ -120,7 +119,6 @@ const projects = [
 		],
 		cover: "public/assets/project-2.webp",
 		repo: "MarcosAntonio15243/let-me-ask-web",
-		order: 2,
 	},
 ];
 
@@ -179,7 +177,6 @@ for (const p of projects) {
 		})),
 		cover: await upload(p.cover),
 		featured: true,
-		order: p.order,
 		repositories: [{ _key: key(), label: "Repository", repo: p.repo }],
 	});
 }

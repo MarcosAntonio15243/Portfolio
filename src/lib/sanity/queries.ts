@@ -9,7 +9,6 @@ const PROJECT_FIELDS = `
 	technologies[]->{ name, "color": color.hex },
 	"coverUrl": cover.asset->url,
 	featured,
-	order,
 	repositories[]{ label, repo }
 `;
 
@@ -17,7 +16,7 @@ const REVALIDATE_SECONDS = 3600; // safety net; the webhook revalidates on publi
 
 export async function getFeaturedProjects(): Promise<ProjectDoc[]> {
 	return client.fetch(
-		`*[_type == "project" && featured == true && count(repositories) > 0] | order(order asc, title asc){${PROJECT_FIELDS}}`,
+		`*[_type == "project" && featured == true && count(repositories) > 0] | order(orderRank asc, title asc){${PROJECT_FIELDS}}`,
 		{},
 		{ next: { tags: ["project"], revalidate: REVALIDATE_SECONDS } },
 	);
@@ -25,7 +24,7 @@ export async function getFeaturedProjects(): Promise<ProjectDoc[]> {
 
 export async function getAllProjects(): Promise<ProjectDoc[]> {
 	return client.fetch(
-		`*[_type == "project" && count(repositories) > 0] | order(order asc, title asc){${PROJECT_FIELDS}}`,
+		`*[_type == "project" && count(repositories) > 0] | order(orderRank asc, title asc){${PROJECT_FIELDS}}`,
 		{},
 		{ next: { tags: ["project"], revalidate: REVALIDATE_SECONDS } },
 	);

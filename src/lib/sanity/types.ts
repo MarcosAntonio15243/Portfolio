@@ -14,7 +14,6 @@ export interface ProjectDoc {
 	technologies: (TechnologyDoc | null)[] | null;
 	coverUrl: string | null;
 	featured: boolean | null;
-	order: number | null;
 	repositories: RepoRef[];
 }
 
