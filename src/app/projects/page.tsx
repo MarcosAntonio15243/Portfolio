@@ -2,12 +2,15 @@ import { ArrowUpRight } from "lucide-react";
 import { FiGithub } from "react-icons/fi";
 import { Header } from "@/components/layout";
 import { ProjectListCard } from "@/components/projects/ProjectListCard";
-import { getPortfolioRepos } from "@/lib/github";
+import { resolveProjectCard } from "@/lib/project-data";
+import { getAllProjects } from "@/lib/sanity/queries";
 
 export const revalidate = 60;
 
 export default async function ProjectsPage() {
-	const repos = await getPortfolioRepos();
+	const projects = await Promise.all(
+		(await getAllProjects()).map(resolveProjectCard),
+	);
 
 	return (
 		<div>
@@ -28,18 +31,18 @@ export default async function ProjectsPage() {
 						</a>
 					</section>
 
-					{repos.length === 0 ? (
+					{projects.length === 0 ? (
 						<div className="text-center text-[var(--color-gray-400)] font-roboto">
-							<p>No repositories with the &quot;portfolio&quot; topic found.</p>
+							<p>No projects yet.</p>
 							<p className="text-sm mt-2">
-								Add the topic on GitHub for it to appear here.
+								Add projects in /studio for them to appear here.
 							</p>
 						</div>
 					) : (
 						<section>
 							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-								{repos.map((repo) => (
-									<ProjectListCard key={repo.id} repo={repo} />
+								{projects.map((p) => (
+									<ProjectListCard key={p.slug} project={p} />
 								))}
 							</div>
 						</section>

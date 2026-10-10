@@ -1,21 +1,34 @@
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { PortableText } from "next-sanity";
 import { CiLinkedin } from "react-icons/ci";
 import { FiGithub } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { ExperienceCard, ProjectCard } from "@/components/cards";
-import { experiences, projects } from "@/components/data";
 import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
-import { enrichProjectsWithOgImages } from "@/lib/github";
+import { resolveProjectCard } from "@/lib/project-data";
+import { formatMonthYear } from "@/lib/projects";
+import {
+	getExperiences,
+	getFeaturedProjects,
+	getSiteSettings,
+} from "@/lib/sanity/queries";
+
+export const revalidate = 3600;
 
 export default async function Home() {
 	const currentYear = new Date().getFullYear();
 
-	const enrichedProjects = await enrichProjectsWithOgImages(projects);
+	const [settings, experiences, featured] = await Promise.all([
+		getSiteSettings(),
+		getExperiences(),
+		getFeaturedProjects(),
+	]);
+	const projects = await Promise.all(featured.map(resolveProjectCard));
 
 	return (
 		<div>
@@ -28,7 +41,7 @@ export default async function Home() {
 					{/* Presentation Section */}
 					<section className="flex flex-col text-center sm:text-left sm:flex-row gap-5 items-center">
 						<Image
-							src="/assets/profile.svg"
+							src={settings?.profileImageUrl ?? "/assets/profile.svg"}
 							alt="Profile photo of Marcos Antonio"
 							height={200}
 							width={200}
@@ -37,19 +50,15 @@ export default async function Home() {
 						<div className="flex flex-col gap-4">
 							<div className="flex flex-col gap-0 text-3xl">
 								<h1 className="text-[var(--color-black)]">
-									Hello, I am Marcos
+									{settings?.headline}
 								</h1>
 								<h2 className="text-[var(--color-gray-400)]">
-									A Full-Stack Developer
+									{settings?.subheadline}
 								</h2>
 							</div>
-							<p>
-								Building complete solutions, combining the development of
-								modern, functional interfaces with the implementation of robust
-								back-end architectures
-							</p>
+							<p>{settings?.intro}</p>
 							<a
-								href="mailto:marcos.antonio.developer@gmail.com"
+								href={`mailto:${settings?.email}`}
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label="Send email to Marcos"
@@ -65,60 +74,29 @@ export default async function Home() {
 					{/* Localization and CV */}
 					<div className="flex flex-col gap-2 sm:flex-row justify-between items-center text-sm text-[var(--color-text-primary)] border-y-[1px] py-3 px-2 border-[var(--color-border)]">
 						<div className="flex flex-row items-center gap-1 text-[var(--color-text-primary)]">
-							<IoLocationOutline className="sm:text-xl" size={16} /> Campina
-							Grande, Paraiba, Brazil
+							<IoLocationOutline className="sm:text-xl" size={16} />{" "}
+							{settings?.location}
 						</div>
-						<CurriculumVitaeDropdown />
+						<CurriculumVitaeDropdown links={settings?.cvLinks ?? []} />
 					</div>
 
 					{/* About Me Section */}
 					<section id="about" className="flex flex-col gap-4 font-roboto">
 						<h2>About Me</h2>
 						<div className="flex flex-col gap-4 p-4 bg-[var(--color-bg-card)] leading-relaxed border-[1px] border-[var(--color-bg-image)]">
-							<p>
-								I started my journey in development in 2019 when I joined the
-								technical course in Informatics at IFPB – Santa Luzia (PB).
-								That’s where I had my first contact with web development,
-								working with
-								<span className="bold">HTML5</span>,{" "}
-								<span className="bold">CSS3</span>, and{" "}
-								<span className="bold">JavaScript</span>. Since then, I’ve been
-								continuously building my skills, with a strong focus on modern
-								frameworks, especially <span className="bold">React.js</span>,
-								which has been my main development tool ever since.
-							</p>
-							<p>
-								Over the years, I’ve deepened my knowledge of the React
-								ecosystem, working with technologies like{" "}
-								<span className="bold">TypeScript</span>,{" "}
-								<span className="bold">Styled Components</span>,
-								<span className="bold">Axios</span>, and{" "}
-								<span className="bold">Next.js</span>, as well as databases like{" "}
-								<span className="bold">PostgreSQL</span>. I also gained
-								experience testing APIs with{" "}
-								<span className="bold">Postman</span> and exploring{" "}
-								<span className="bold">Oracle APEX</span>, which helped me
-								broaden my understanding of web development and system
-								integration.
-							</p>
-							<p>
-								I'm passionate about <span className="bold">learning</span>,
-								delivering{" "}
-								<span className="bold">clean and efficient code</span>, and
-								creating great <span className="bold">user experiences</span>. I
-								believe my hands-on
-								<span className="bold">experience</span>,{" "}
-								<span className="bold">adaptability</span>, and{" "}
-								<span className="bold">results-driven mindset</span> can bring
-								value to any team — especially when it comes to building
-								<span className="bold">responsive interfaces</span> and
-								integrating systems seamlessly.
-							</p>
-							<p>
-								I'm excited to take on new challenges, collaborate with
-								passionate teams, and keep growing both personally and
-								professionally.
-							</p>
+							{settings?.about && (
+								<PortableText
+									value={settings.about}
+									components={{
+										block: { normal: ({ children }) => <p>{children}</p> },
+										marks: {
+											strong: ({ children }) => (
+												<span className="bold">{children}</span>
+											),
+										},
+									}}
+								/>
+							)}
 						</div>
 					</section>
 
@@ -128,18 +106,16 @@ export default async function Home() {
 					<section id="experience" className="flex flex-col gap-5">
 						<h2>My Experience</h2>
 						<div className="flex flex-col gap-4 my-5">
-							{experiences.map((e, index) => {
-								return (
-									<ExperienceCard
-										key={`${index}-${e.jobTitle}`}
-										jobTitle={e.jobTitle}
-										enterprise={e.enterprise}
-										dateStart={e.dateStart}
-										dateEnd={e.dateEnd}
-										description={e.description}
-									/>
-								);
-							})}
+							{experiences.map((e) => (
+								<ExperienceCard
+									key={e._id}
+									jobTitle={e.jobTitle}
+									enterprise={e.enterprise}
+									dateStart={formatMonthYear(e.dateStart)}
+									dateEnd={e.dateEnd ? formatMonthYear(e.dateEnd) : null}
+									description={e.description}
+								/>
+							))}
 						</div>
 					</section>
 
@@ -158,17 +134,16 @@ export default async function Home() {
 						</div>
 
 						<div className="flex flex-col gap-8 my-5">
-							{enrichedProjects.map((e, index) => {
-								return (
-									<ProjectCard
-										key={`${index}-${e.projectTitle}`}
-										srcImg={e.srcImg}
-										projectTitle={e.projectTitle}
-										description={e.description}
-										tecnologies={e.tecnologies}
-									/>
-								);
-							})}
+							{projects.map((p) => (
+								<ProjectCard
+									key={p.slug}
+									slug={p.slug}
+									srcImg={p.imageUrl}
+									projectTitle={p.title}
+									description={p.description}
+									tecnologies={p.technologies}
+								/>
+							))}
 						</div>
 						<a
 							href="https://github.com/MarcosAntonio15243?tab=repositories"
@@ -189,12 +164,9 @@ export default async function Home() {
 
 					<section id="contact" className="flex flex-col gap-5">
 						<h2>Contact Me</h2>
-						<p>
-							Have an opportunity or a project in mind? feel free to get in
-							touch.
-						</p>
+						<p>{settings?.contactText}</p>
 						<a
-							href="mailto:marcos.antonio.developer@gmail.com"
+							href={`mailto:${settings?.email}`}
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="Send email to Marcos"
@@ -208,22 +180,26 @@ export default async function Home() {
 					<footer>
 						<div className="flex flex-col gap-2 my-5 items-center text-[var(--color-text-primary)]">
 							<div className="flex flex-row items-center gap-2">
-								<a
-									href="https://github.com/MarcosAntonio15243"
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="Link to github profile"
-								>
-									<FiGithub className="text-xl hover:text-[var(--color-dark-blue)]" />
-								</a>
-								<a
-									href="https://www.linkedin.com/in/marcos-antonio-18059b234"
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="Link to linkedin profile"
-								>
-									<CiLinkedin className="text-2xl hover:text-[var(--color-dark-blue)]" />
-								</a>
+								{settings?.githubUrl && (
+									<a
+										href={settings.githubUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Link to github profile"
+									>
+										<FiGithub className="text-xl hover:text-[var(--color-dark-blue)]" />
+									</a>
+								)}
+								{settings?.linkedinUrl && (
+									<a
+										href={settings.linkedinUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Link to linkedin profile"
+									>
+										<CiLinkedin className="text-2xl hover:text-[var(--color-dark-blue)]" />
+									</a>
+								)}
 							</div>
 							<span className="text-[var(--color-text-primary)]">
 								Marcos Antonio - {currentYear}

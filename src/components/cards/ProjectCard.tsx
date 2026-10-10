@@ -9,6 +9,7 @@ import { FiGithub } from "react-icons/fi";
 import { ImageModal } from "./ImageModal";
 
 interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
+	slug: string;
 	srcImg: string;
 	altImg?: string;
 	projectTitle: string;
@@ -17,6 +18,7 @@ interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
 }
 
 export function ProjectCard({
+	slug,
 	srcImg,
 	altImg = "Featured Project Preview",
 	projectTitle,
@@ -64,7 +66,7 @@ export function ProjectCard({
 					<p className="text-sm md:text-base">{description}</p>
 					<div className="flex flex-col gap-2 justify-center items-center md:items-start">
 						<Link
-							href={`/projects/${projectTitle.toLowerCase().replace(/ /g, "-")}`}
+							href={`/projects/${slug}`}
 							aria-label="Link to repository at project in GitHub"
 						>
 							<span className="font-roboto underline underline-offset-4 gap-1 flex flex-row items-center text-sm font-medium text-[var(--color-link)] hover:text-[var(--color-gray-600)]">
