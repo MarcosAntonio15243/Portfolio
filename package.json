@@ -6,8 +6,11 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"format": "biome format --write . --no-errors-on-unmatched"
+		"lint": "biome lint .",
+		"format": "biome format --write . --no-errors-on-unmatched",
+		"format:check": "biome format .",
+		"check": "biome check .",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"lucide-react": "^0.553.0",
