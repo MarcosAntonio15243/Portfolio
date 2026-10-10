@@ -1,4 +1,8 @@
 const GITHUB_API = "https://api.github.com";
+// Repositories rarely change and the unauthenticated API allows only 60 calls
+// per hour, so GitHub data is cached for six hours. Only 200 responses are stored,
+// so a rate limit error is never cached and stale data is kept on failure.
+const GITHUB_REVALIDATE_SECONDS = 21600;
 const BADGE_PATTERNS = [
 	/img\.shields\.io/,
 	/badge\.fury\.io/,
@@ -59,7 +63,7 @@ export async function fetchOgImageWithRetry(
 		try {
 			const res = await fetch(`https://github.com/${repoFullName}`, {
 				headers: { "User-Agent": "portfolio-bot" },
-				next: { revalidate: 3600 },
+				next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 			});
 
 			if (res.status === 429) {
@@ -96,15 +100,15 @@ export async function getRepoDetail(
 	const [repoRes, readmeRes, languagesRes] = await Promise.allSettled([
 		fetch(`${GITHUB_API}/repos/${owner}/${name}`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
 		fetch(`${GITHUB_API}/repos/${owner}/${name}/readme`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
 		fetch(`${GITHUB_API}/repos/${owner}/${name}/languages`, {
 			headers,
-			next: { revalidate: 0 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		}),
 	]);
 
@@ -179,7 +183,7 @@ export async function getRepoMeta(
 	try {
 		const res = await fetch(`${GITHUB_API}/repos/${repoFullName}`, {
 			headers,
-			next: { revalidate: 3600 },
+			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		});
 		if (!res.ok) return null;
 		return await res.json();

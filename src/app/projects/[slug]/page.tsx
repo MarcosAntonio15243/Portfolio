@@ -31,8 +31,6 @@ import {
 } from "@/lib/projects";
 import { getProjectBySlug } from "@/lib/sanity/queries";
 
-export const revalidate = 0;
-
 interface Props {
 	params: Promise<{ slug: string }>;
 	searchParams: Promise<{ repo?: string | string[] }>;
