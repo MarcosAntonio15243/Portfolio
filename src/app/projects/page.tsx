@@ -4,8 +4,16 @@ import { Header } from "@/components/layout";
 import { ProjectListCard } from "@/components/projects/ProjectListCard";
 import { resolveProjectCard } from "@/lib/project-data";
 import { getAllProjects } from "@/lib/sanity/queries";
+import { pageMetadata } from "@/lib/seo";
+import { PROJECTS_DESCRIPTION } from "@/lib/site";
 
 export const revalidate = 60;
+
+export const metadata = pageMetadata({
+	title: "Projects",
+	description: PROJECTS_DESCRIPTION,
+	path: "/projects",
+});
 
 export default async function ProjectsPage() {
 	const projects = await Promise.all(

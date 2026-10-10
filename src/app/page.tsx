@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PortableText } from "next-sanity";
@@ -17,8 +18,21 @@ import {
 	getFeaturedProjects,
 	getSiteSettings,
 } from "@/lib/sanity/queries";
+import { pageMetadata } from "@/lib/seo";
+import { DEFAULT_DESCRIPTION } from "@/lib/site";
 
 export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+	const settings = await getSiteSettings();
+	return pageMetadata({
+		description:
+			settings?.seoDescription?.trim() ||
+			settings?.intro?.trim() ||
+			DEFAULT_DESCRIPTION,
+		path: "/",
+	});
+}
 
 export default async function Home() {
 	const currentYear = new Date().getFullYear();

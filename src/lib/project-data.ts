@@ -56,3 +56,20 @@ export async function resolveProjectCard(
 		updatedAt,
 	};
 }
+
+// Description only: avoids the image lookup that resolveProjectCard does
+export async function resolveProjectDescription(
+	project: ProjectDoc,
+): Promise<string> {
+	if (project.summary?.trim()) {
+		return resolveDescription(project.summary, []);
+	}
+	const repos = project.repositories
+		.map((r) => normalizeRepo(r.repo))
+		.filter((r): r is string => r !== null);
+	const metas = await Promise.all(repos.map((r) => getRepoMeta(r)));
+	return resolveDescription(
+		project.summary,
+		metas.map((m) => m?.description),
+	);
+}

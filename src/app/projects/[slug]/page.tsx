@@ -5,6 +5,7 @@ import {
 	GitFork,
 	Star,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,6 +22,7 @@ import {
 	resolveMarkdownImageUrls,
 	stripBadges,
 } from "@/lib/markdown";
+import { resolveProjectDescription } from "@/lib/project-data";
 import {
 	cleanTechnologies,
 	normalizeRepo,
@@ -30,6 +32,7 @@ import {
 	tabId,
 } from "@/lib/projects";
 import { getProjectBySlug } from "@/lib/sanity/queries";
+import { pageMetadata } from "@/lib/seo";
 
 interface Props {
 	params: Promise<{ slug: string }>;
@@ -37,6 +40,19 @@ interface Props {
 }
 
 const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";
+
+export async function generateMetadata({
+	params,
+}: Pick<Props, "params">): Promise<Metadata> {
+	const { slug } = await params;
+	const project = await getProjectBySlug(slug);
+	if (!project) return {};
+	return pageMetadata({
+		title: project.title,
+		description: await resolveProjectDescription(project),
+		path: `/projects/${project.slug}`,
+	});
+}
 
 export default async function ProjectDetailPage({
 	params,
