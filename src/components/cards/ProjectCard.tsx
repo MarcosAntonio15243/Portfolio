@@ -69,12 +69,10 @@ export function ProjectCard({
 					<h3 className="max-md:my-2">{projectTitle}</h3>
 					<p className="text-sm md:text-base">{description}</p>
 					<div className="flex flex-col gap-2 justify-center items-center md:items-start">
-						<Link
-							href={`/projects/${slug}`}
-							aria-label={`See more about ${projectTitle}`}
-						>
+						<Link href={`/projects/${slug}`}>
 							<span className="font-roboto underline underline-offset-4 gap-1 flex flex-row items-center text-sm font-medium text-[var(--color-link)] hover:text-[var(--color-gray-600)]">
 								See more
+								<span className="sr-only">about {projectTitle}</span>
 								<ArrowUpRight className="size-4" />
 							</span>
 						</Link>
