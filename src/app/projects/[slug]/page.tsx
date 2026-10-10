@@ -15,11 +15,7 @@ import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { RepoTabs } from "@/components/projects/RepoTabs";
 import { Divider } from "@/components/ui";
-import {
-	getRepoDescription,
-	getRepoDetail,
-	LANGUAGE_COLORS,
-} from "@/lib/github";
+import { getRepoDetail, getRepoMeta, LANGUAGE_COLORS } from "@/lib/github";
 import {
 	markdownToHtml,
 	resolveMarkdownImageUrls,
@@ -70,7 +66,9 @@ export default async function ProjectDetailPage({
 	// Description: CMS summary, then GitHub descriptions in array order
 	const fallbackDescriptions = project.summary?.trim()
 		? []
-		: await Promise.all(repos.map((r) => getRepoDescription(r.full)));
+		: (await Promise.all(repos.map((r) => getRepoMeta(r.full)))).map(
+				(m) => m?.description,
+			);
 	const description = resolveDescription(project.summary, fallbackDescriptions);
 
 	const rawBase = repo

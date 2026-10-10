@@ -166,18 +166,23 @@ function resolveImageUrl(url: string, rawBase: string): string | null {
 	return `${rawBase}${url}`;
 }
 
-// Light lookup used for the description fallback
-export async function getRepoDescription(
+export interface RepoMeta {
+	description: string | null;
+	language: string | null;
+	updated_at: string;
+}
+
+// Light lookup used for card data and the description fallback
+export async function getRepoMeta(
 	repoFullName: string,
-): Promise<string | null> {
+): Promise<RepoMeta | null> {
 	try {
 		const res = await fetch(`${GITHUB_API}/repos/${repoFullName}`, {
 			headers,
 			next: { revalidate: 3600 },
 		});
 		if (!res.ok) return null;
-		const data: { description: string | null } = await res.json();
-		return data.description;
+		return await res.json();
 	} catch {
 		return null;
 	}
