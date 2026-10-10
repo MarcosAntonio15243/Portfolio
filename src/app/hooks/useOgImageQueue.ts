@@ -23,7 +23,7 @@ async function fetchWithRetry(
 				const retryAfter = res.headers.get("Retry-After");
 				const delay = retryAfter
 					? parseInt(retryAfter) * 1000
-					: baseDelay * Math.pow(2, attempt);
+					: baseDelay * 2 ** attempt;
 				await sleep(delay, jitter);
 				continue;
 			}
@@ -34,8 +34,7 @@ async function fetchWithRetry(
 			const match = html.match(/<meta property="og:image"\s+content="([^"]+)"/);
 			return match?.[1] ?? null;
 		} catch {
-			if (attempt < retries)
-				await sleep(baseDelay * Math.pow(2, attempt), jitter);
+			if (attempt < retries) await sleep(baseDelay * 2 ** attempt, jitter);
 		}
 	}
 	return null;

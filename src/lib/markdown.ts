@@ -1,8 +1,7 @@
-import type { Options as SanitizeOptions } from "rehype-sanitize";
-import { defaultSchema } from "rehype-sanitize";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
+import type { Options as SanitizeOptions } from "rehype-sanitize";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";

@@ -1,15 +1,15 @@
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { CiLinkedin } from "react-icons/ci";
 import { FiGithub } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { ExperienceCard, ProjectCard } from "@/components/cards";
 import { experiences, projects } from "@/components/data";
+import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { Header } from "@/components/layout";
 import { Divider } from "@/components/ui";
-import Link from "next/link";
-import { CurriculumVitaeDropdown } from "@/components/dropdown";
 import { enrichProjectsWithOgImages } from "@/lib/github";
 
 export default async function Home() {

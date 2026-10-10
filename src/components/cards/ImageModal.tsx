@@ -1,8 +1,8 @@
 "use client";
 
+import { RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 interface ImageModalProps {
 	src: string;

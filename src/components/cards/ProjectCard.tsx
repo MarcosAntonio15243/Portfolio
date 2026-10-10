@@ -2,11 +2,11 @@
 
 import { ArrowUpRight, Search } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
 import type { HTMLAttributes } from "react";
+import { useState } from "react";
 import { FiGithub } from "react-icons/fi";
 import { ImageModal } from "./ImageModal";
-import Link from "next/link";
 
 interface ProjectCardProps extends HTMLAttributes<HTMLElement> {
 	srcImg: string;

@@ -1,7 +1,7 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { ChevronDown, ExternalLink } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 const cvLinks = [
 	{

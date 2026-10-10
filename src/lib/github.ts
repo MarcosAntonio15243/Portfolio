@@ -93,7 +93,7 @@ export async function fetchOgImageWithRetry(
 				const retryAfter = res.headers.get("Retry-After");
 				const delay = retryAfter
 					? parseInt(retryAfter) * 1000
-					: baseDelay * Math.pow(2, attempt);
+					: baseDelay * 2 ** attempt;
 				if (attempt < retries) {
 					await new Promise((r) => setTimeout(r, delay));
 					continue;
@@ -108,9 +108,7 @@ export async function fetchOgImageWithRetry(
 			return match?.[1] ?? null;
 		} catch {
 			if (attempt < retries) {
-				await new Promise((r) =>
-					setTimeout(r, baseDelay * Math.pow(2, attempt)),
-				);
+				await new Promise((r) => setTimeout(r, baseDelay * 2 ** attempt));
 			}
 		}
 	}
