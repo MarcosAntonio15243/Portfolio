@@ -73,8 +73,35 @@ cd Portfolio
 # Install dependencies
 npm install
 
+# Create .env.local with the variables listed in "Content Management"
+
 # Start the development server
 npm run dev
+```
+
+## Content Management
+
+Projects, experiences and site texts live in [Sanity](https://www.sanity.io/) and are edited at `/studio` (login required, restricted to the project members). Published changes reach the site within seconds, without a new deploy.
+
+Environment variables (`.env.local` locally, Project Settings on Vercel):
+
+```bash
+NEXT_PUBLIC_SANITY_PROJECT_ID=<project id>
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_REVALIDATE_SECRET=<random string shared with the webhook>
+```
+
+Setup checklist:
+
+- Sanity manage -> API -> CORS origins: add the production domain and `http://localhost:3000` (allow credentials)
+- Sanity manage -> API -> Webhooks: URL `https://<domain>/api/revalidate`, trigger on create, update and delete, filter `_type in ["project", "experience", "siteSettings"]`, projection `{_type}`, same secret as `SANITY_REVALIDATE_SECRET`
+- GitHub -> Settings -> Secrets and variables -> Actions -> Variables: `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`, used by the CI build
+- A project can have several GitHub repositories (for example Front-end and Back-end); they appear as tabs on the project page and the first one is the main repository
+
+To import the initial content into an empty dataset, create a temporary Sanity API token with Editor permission, run it only in the shell and revoke it afterwards:
+
+```bash
+SANITY_WRITE_TOKEN=<token> npm run seed
 ```
 
 ## Contributing
