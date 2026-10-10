@@ -202,7 +202,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 							<h2>Project Image</h2>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								{galleryImages.map((src, i) => (
-									<ImageModalTrigger key={i} src={src} index={i} />
+									<ImageModalTrigger key={src} src={src} index={i} />
 								))}
 							</div>
 						</section>

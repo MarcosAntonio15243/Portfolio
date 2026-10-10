@@ -34,6 +34,7 @@ export function ProjectCard({
 			>
 				{/* Image button */}
 				<button
+					type="button"
 					onClick={() => setIsModalOpen(true)}
 					aria-label={`Enlarge project image ${projectTitle}`}
 					className="group relative cursor-pointer w-full sm:min-w-[300px] sm:max-w-[400px] md:w-[300px] mx-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-dark-blue)]"

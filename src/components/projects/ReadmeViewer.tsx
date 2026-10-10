@@ -8,6 +8,7 @@ export function ReadmeViewer({ html, className = "" }: ReadmeViewerProps) {
 	return (
 		<div
 			className={`readme-content font-roboto leading-relaxed overflow-x-hidden min-w-0 w-full ${className}`}
+			// biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized by rehype-sanitize in lib/markdown
 			dangerouslySetInnerHTML={{ __html: html }}
 		/>
 	);

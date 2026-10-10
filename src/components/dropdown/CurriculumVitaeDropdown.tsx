@@ -33,6 +33,7 @@ export function CurriculumVitaeDropdown() {
 	return (
 		<div className="relative" ref={ref}>
 			<button
+				type="button"
 				onClick={() => setOpen((v) => !v)}
 				className="font-roboto cursor-pointer hover:underline flex items-center gap-1 flex-row"
 				aria-haspopup="true"

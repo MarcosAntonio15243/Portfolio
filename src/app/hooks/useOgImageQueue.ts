@@ -22,7 +22,7 @@ async function fetchWithRetry(
 				if (attempt >= retries) return null;
 				const retryAfter = res.headers.get("Retry-After");
 				const delay = retryAfter
-					? parseInt(retryAfter) * 1000
+					? parseInt(retryAfter, 10) * 1000
 					: baseDelay * 2 ** attempt;
 				await sleep(delay, jitter);
 				continue;

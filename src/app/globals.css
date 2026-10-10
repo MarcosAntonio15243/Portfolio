@@ -230,6 +230,7 @@ p {
 /* Default light theme */
 .readme-content pre,
 .readme-content code {
+	/* biome-ignore lint/complexity/noImportantStyles: overrides shiki inline background */
 	background: var(--color-bg-surface) !important;
 }
 
