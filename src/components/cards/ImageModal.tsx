@@ -1,8 +1,8 @@
 "use client";
 
+import { RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 
 interface ImageModalProps {
 	src: string;
@@ -96,14 +96,22 @@ export function ImageModal({
 	return (
 		<div
 			className="fixed inset-0 z-1000 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Image viewer"
 			onClick={onClose}
+			onKeyDown={(e) => e.key === "Escape" && onClose()}
 		>
 			{/* Toolbar */}
 			<div
 				className="absolute top-4 right-4 flex items-center gap-2 z-10"
+				role="toolbar"
+				aria-label="Image controls"
 				onClick={(e) => e.stopPropagation()}
+				onKeyDown={(e) => e.stopPropagation()}
 			>
 				<button
+					type="button"
 					onClick={handleZoomOut}
 					disabled={scale <= MIN_SCALE}
 					aria-label="Zoom out"
@@ -115,6 +123,7 @@ export function ImageModal({
 					{Math.round(scale * 100)}%
 				</span>
 				<button
+					type="button"
 					onClick={handleZoomIn}
 					disabled={scale >= MAX_SCALE}
 					aria-label="Zoom in"
@@ -123,6 +132,7 @@ export function ImageModal({
 					<ZoomIn className="size-5" />
 				</button>
 				<button
+					type="button"
 					onClick={handleReset}
 					aria-label="Reset zoom"
 					className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
@@ -130,6 +140,7 @@ export function ImageModal({
 					<RotateCcw className="size-4" />
 				</button>
 				<button
+					type="button"
 					onClick={onClose}
 					aria-label="Close modal"
 					className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
@@ -149,7 +160,10 @@ export function ImageModal({
 			<div
 				className="relative overflow-hidden"
 				style={{ width: "90vw", height: "85vh" }}
+				role="img"
+				aria-label="Zoomable image"
 				onClick={(e) => e.stopPropagation()}
+				onKeyDown={(e) => e.stopPropagation()}
 				onWheel={handleWheel}
 				onMouseDown={handleMouseDown}
 				onMouseMove={handleMouseMove}

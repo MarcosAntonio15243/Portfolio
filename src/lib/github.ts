@@ -92,8 +92,8 @@ export async function fetchOgImageWithRetry(
 			if (res.status === 429) {
 				const retryAfter = res.headers.get("Retry-After");
 				const delay = retryAfter
-					? parseInt(retryAfter) * 1000
-					: baseDelay * Math.pow(2, attempt);
+					? parseInt(retryAfter, 10) * 1000
+					: baseDelay * 2 ** attempt;
 				if (attempt < retries) {
 					await new Promise((r) => setTimeout(r, delay));
 					continue;
@@ -108,9 +108,7 @@ export async function fetchOgImageWithRetry(
 			return match?.[1] ?? null;
 		} catch {
 			if (attempt < retries) {
-				await new Promise((r) =>
-					setTimeout(r, baseDelay * Math.pow(2, attempt)),
-				);
+				await new Promise((r) => setTimeout(r, baseDelay * 2 ** attempt));
 			}
 		}
 	}
@@ -171,14 +169,11 @@ function extractImagesFromReadme(
 	const htmlImgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
 	const found = new Set<string>();
 
-	let match;
-	while ((match = imgRegex.exec(readme)) !== null) {
-		const url = resolveImageUrl(match[1], rawBase);
-		if (url && !isBadgeUrl(url)) found.add(url);
-	}
-	while ((match = htmlImgRegex.exec(readme)) !== null) {
-		const url = resolveImageUrl(match[1], rawBase);
-		if (url && !isBadgeUrl(url)) found.add(url);
+	for (const regex of [imgRegex, htmlImgRegex]) {
+		for (const match of readme.matchAll(regex)) {
+			const url = resolveImageUrl(match[1], rawBase);
+			if (url && !isBadgeUrl(url)) found.add(url);
+		}
 	}
 
 	return Array.from(found);

@@ -1,8 +1,8 @@
+import { ArrowUpRight } from "lucide-react";
+import { FiGithub } from "react-icons/fi";
 import { Header } from "@/components/layout";
 import { ProjectListCard } from "@/components/projects/ProjectListCard";
 import { getPortfolioRepos } from "@/lib/github";
-import { ArrowUpRight } from "lucide-react";
-import { FiGithub } from "react-icons/fi";
 
 export const revalidate = 60;
 

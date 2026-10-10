@@ -8,18 +8,18 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FiGithub } from "react-icons/fi";
+import { LocaleDate } from "@/components/date/LocaleDate";
 import { Header } from "@/components/layout";
-import { Divider } from "@/components/ui";
+import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
+import { Divider } from "@/components/ui";
 import { getRepoDetail, LANGUAGE_COLORS } from "@/lib/github";
 import {
 	markdownToHtml,
 	resolveMarkdownImageUrls,
 	stripBadges,
 } from "@/lib/markdown";
-import { FiGithub } from "react-icons/fi";
-import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
-import { LocaleDate } from "@/components/date/LocaleDate";
 
 export const revalidate = 0;
 
@@ -202,7 +202,7 @@ export default async function ProjectDetailPage({ params }: Props) {
 							<h2>Project Image</h2>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								{galleryImages.map((src, i) => (
-									<ImageModalTrigger key={i} src={src} index={i} />
+									<ImageModalTrigger key={src} src={src} index={i} />
 								))}
 							</div>
 						</section>

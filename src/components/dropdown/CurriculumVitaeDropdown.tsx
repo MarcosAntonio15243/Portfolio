@@ -1,7 +1,7 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { ChevronDown, ExternalLink } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 const cvLinks = [
 	{
@@ -33,6 +33,7 @@ export function CurriculumVitaeDropdown() {
 	return (
 		<div className="relative" ref={ref}>
 			<button
+				type="button"
 				onClick={() => setOpen((v) => !v)}
 				className="font-roboto cursor-pointer hover:underline flex items-center gap-1 flex-row"
 				aria-haspopup="true"
