@@ -1,5 +1,6 @@
 import { createReadStream } from "node:fs";
 import { createClient } from "@sanity/client";
+import { technologyDoc, technologyId } from "./technologies.mjs";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -125,6 +126,10 @@ const projects = [
 
 const tx = client.transaction();
 
+for (const name of new Set(projects.flatMap((p) => p.technologies))) {
+	tx.createOrReplace(technologyDoc(name));
+}
+
 tx.createOrReplace({
 	_id: "siteSettings",
 	_type: "siteSettings",
@@ -167,7 +172,11 @@ for (const p of projects) {
 		title: p.title,
 		slug: { _type: "slug", current: p.slug },
 		summary: p.summary,
-		technologies: p.technologies,
+		technologies: p.technologies.map((name) => ({
+			_type: "reference",
+			_key: key(),
+			_ref: technologyId(name),
+		})),
 		cover: await upload(p.cover),
 		featured: true,
 		order: p.order,

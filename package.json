@@ -12,7 +12,8 @@
 		"check": "biome check .",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
-		"seed": "node --env-file=.env.local scripts/seed.mjs"
+		"seed": "node --env-file=.env.local scripts/seed.mjs",
+		"migrate:technologies": "node --env-file=.env.local scripts/migrate-technologies.mjs"
 	},
 	"dependencies": {
 		"@sanity/color-input": "^6.1.6",
