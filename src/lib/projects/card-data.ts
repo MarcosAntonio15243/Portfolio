@@ -5,7 +5,7 @@ import {
 	pickMainImage,
 	resolveDescription,
 	type Technology,
-} from "@/lib/projects";
+} from "@/lib/projects/helpers";
 import type { ProjectDoc } from "@/lib/sanity/types";
 
 export const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";
@@ -55,4 +55,21 @@ export async function resolveProjectCard(
 		mainLanguage: metas[0]?.language ?? null,
 		updatedAt,
 	};
+}
+
+// Description only: avoids the image lookup that resolveProjectCard does
+export async function resolveProjectDescription(
+	project: ProjectDoc,
+): Promise<string> {
+	if (project.summary?.trim()) {
+		return resolveDescription(project.summary, []);
+	}
+	const repos = project.repositories
+		.map((r) => normalizeRepo(r.repo))
+		.filter((r): r is string => r !== null);
+	const metas = await Promise.all(repos.map((r) => getRepoMeta(r)));
+	return resolveDescription(
+		project.summary,
+		metas.map((m) => m?.description),
+	);
 }

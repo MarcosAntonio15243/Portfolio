@@ -5,6 +5,7 @@ import {
 	GitFork,
 	Star,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,6 +15,7 @@ import { Header } from "@/components/layout";
 import { ImageModalTrigger } from "@/components/projects/ImageModalTrigger";
 import { ReadmeViewer } from "@/components/projects/ReadmeViewer";
 import { RepoTabs } from "@/components/projects/RepoTabs";
+import { JsonLd } from "@/components/seo";
 import { Divider, TechnologyDot } from "@/components/ui";
 import { getRepoDetail, getRepoMeta, LANGUAGE_COLORS } from "@/lib/github";
 import {
@@ -21,6 +23,7 @@ import {
 	resolveMarkdownImageUrls,
 	stripBadges,
 } from "@/lib/markdown";
+import { resolveProjectDescription } from "@/lib/projects/card-data";
 import {
 	cleanTechnologies,
 	normalizeRepo,
@@ -28,8 +31,11 @@ import {
 	resolveDescription,
 	selectRepo,
 	tabId,
-} from "@/lib/projects";
+} from "@/lib/projects/helpers";
 import { getProjectBySlug } from "@/lib/sanity/queries";
+import { buildBreadcrumbJsonLd, buildProjectJsonLd } from "@/lib/seo/json-ld";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { absoluteUrl } from "@/lib/seo/site";
 
 interface Props {
 	params: Promise<{ slug: string }>;
@@ -37,6 +43,19 @@ interface Props {
 }
 
 const PLACEHOLDER_SVG = "/assets/project-placeholder.svg";
+
+export async function generateMetadata({
+	params,
+}: Pick<Props, "params">): Promise<Metadata> {
+	const { slug } = await params;
+	const project = await getProjectBySlug(slug);
+	if (!project) return {};
+	return pageMetadata({
+		title: project.title,
+		description: await resolveProjectDescription(project),
+		path: `/projects/${project.slug}`,
+	});
+}
 
 export default async function ProjectDetailPage({
 	params,
@@ -106,6 +125,26 @@ export default async function ProjectDetailPage({
 
 	return (
 		<div>
+			<JsonLd
+				data={buildProjectJsonLd({
+					name: project.title,
+					description,
+					url: absoluteUrl(`/projects/${project.slug}`),
+					repositories: repos.map((r) => `https://github.com/${r.full}`),
+					languages: technologies.map((t) => t.name),
+					authorUrl: absoluteUrl("/"),
+				})}
+			/>
+			<JsonLd
+				data={buildBreadcrumbJsonLd([
+					{ name: "Home", url: absoluteUrl("/") },
+					{ name: "Projects", url: absoluteUrl("/projects") },
+					{
+						name: project.title,
+						url: absoluteUrl(`/projects/${project.slug}`),
+					},
+				])}
+			/>
 			<Header />
 			<main className="pt-12 flex flex-col justify-center items-center">
 				<div className="mx-6 max-content-w flex flex-col gap-10 py-10">

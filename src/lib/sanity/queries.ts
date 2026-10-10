@@ -9,6 +9,7 @@ const PROJECT_FIELDS = `
 	technologies[]->{ name, "color": color.hex },
 	"coverUrl": cover.asset->url,
 	featured,
+	"updatedAt": _updatedAt,
 	repositories[]{ label, repo }
 `;
 
@@ -52,7 +53,7 @@ export async function getSiteSettings(): Promise<SiteSettingsDoc | null> {
 	return client.fetch(
 		`*[_type == "siteSettings"][0]{
 			"profileImageUrl": profileImage.asset->url,
-			headline, subheadline, intro, location, email, githubUrl, linkedinUrl,
+			headline, subheadline, intro, seoDescription, location, email, githubUrl, linkedinUrl,
 			cvLinks[]{ lang, flag, href },
 			about, contactText
 		}`,

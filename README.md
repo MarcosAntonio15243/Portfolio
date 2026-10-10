@@ -98,6 +98,17 @@ Setup checklist:
 - GitHub -> Settings -> Secrets and variables -> Actions -> Variables: `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET`, used by the CI build
 - A project can have several GitHub repositories (for example Front-end and Back-end); they appear as tabs on the project page and the first one is the main repository
 
+## Discoverability
+
+The site exposes metadata, share images, a sitemap, `robots.txt`, structured data (JSON-LD) and plain text files for AI assistants (`/llms.txt` and `/llms-full.txt`). Everything is generated from the Sanity content, so a new project appears in the sitemap and in the text files without code changes.
+
+Optional environment variables:
+
+- `NEXT_PUBLIC_SITE_URL`: canonical address of the site (default `https://marcos-antonio-portfolio.vercel.app`). Change it on Vercel when the site moves to a custom domain.
+- `GOOGLE_SITE_VERIFICATION`: verification token for Google Search Console.
+
+In the Studio, the "SEO description" field in Site settings controls the description shown by search engines and in link previews for the home page. Each project uses its summary (or its GitHub description when the summary is empty).
+
 ## Contributing
 
 Contributions, suggestions, and discussions are always welcome!

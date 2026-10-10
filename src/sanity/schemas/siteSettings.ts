@@ -9,6 +9,14 @@ export const siteSettings = defineType({
 		defineField({ name: "headline", type: "string" }),
 		defineField({ name: "subheadline", type: "string" }),
 		defineField({ name: "intro", type: "text", rows: 3 }),
+		defineField({
+			name: "seoDescription",
+			type: "text",
+			rows: 3,
+			description:
+				"Description shown by search engines and in link previews. About 160 characters. If empty, the intro is used.",
+			validation: (r) => r.max(200).warning("Keep it near 160 characters"),
+		}),
 		defineField({ name: "location", type: "string" }),
 		defineField({ name: "email", type: "string" }),
 		defineField({ name: "githubUrl", type: "url" }),
