@@ -107,6 +107,17 @@ p {
 	color: var(--color-primary);
 }
 
+/* Smaller page title on mobile */
+.page-title {
+	font-size: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+	.page-title {
+		font-size: 2rem;
+	}
+}
+
 .button {
 	color: var(--color-fg-button);
 	background-color: var(--color-bg-button);
@@ -230,6 +241,7 @@ p {
 /* Default light theme */
 .readme-content pre,
 .readme-content code {
+	/* biome-ignore lint/complexity/noImportantStyles: overrides shiki inline background */
 	background: var(--color-bg-surface) !important;
 }
 

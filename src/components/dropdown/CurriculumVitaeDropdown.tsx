@@ -1,22 +1,15 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { ChevronDown, ExternalLink } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
-const cvLinks = [
-	{
-		lang: "Português",
-		flag: "🇧🇷",
-		href: "https://drive.google.com/file/d/161qEL4Legezs2Tm63UkUWrDwbPtFaYv3/view?usp=sharing",
-	},
-	{
-		lang: "English",
-		flag: "🇺🇸",
-		href: "https://drive.google.com/file/d/1rYJveVt785XJq2k0FWu2vGUDHT8XNxaH/view?usp=sharing",
-	},
-];
+interface CvLink {
+	lang: string;
+	flag: string;
+	href: string;
+}
 
-export function CurriculumVitaeDropdown() {
+export function CurriculumVitaeDropdown({ links }: { links: CvLink[] }) {
 	const [open, setOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -30,9 +23,12 @@ export function CurriculumVitaeDropdown() {
 		return () => document.removeEventListener("click", handler);
 	}, []);
 
+	if (links.length === 0) return null;
+
 	return (
 		<div className="relative" ref={ref}>
 			<button
+				type="button"
 				onClick={() => setOpen((v) => !v)}
 				className="font-roboto cursor-pointer hover:underline flex items-center gap-1 flex-row"
 				aria-haspopup="true"
@@ -47,7 +43,7 @@ export function CurriculumVitaeDropdown() {
 
 			{open && (
 				<div className="absolute right-0 top-[calc(100%+8px)] z-10 min-w-44 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-card)]">
-					{cvLinks.map((item) => (
+					{links.map((item) => (
 						<a
 							key={item.lang}
 							href={item.href}

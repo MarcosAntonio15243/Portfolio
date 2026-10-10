@@ -15,6 +15,7 @@ export function ImageModalTrigger({ src, index }: ImageModalTriggerProps) {
 	return (
 		<>
 			<button
+				type="button"
 				onClick={() => setOpen(true)}
 				aria-label={`View screenshot ${index + 1}`}
 				className="group relative aspect-video overflow-hidden border-[1px] border-[var(--color-bg-image)] cursor-zoom-in w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-dark-blue)]"
